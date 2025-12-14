@@ -8,7 +8,7 @@ const config: Config = {
   testEnvironment: 'node',
 
   // Onde o Jest vai procurar testes
-  roots: ['<rootDir>/src'],
+  roots: ['<rootDir>/Shared', '<rootDir>/Api', '<rootDir>/Web'],
 
   // Padrão de arquivos de teste
   testMatch: [
