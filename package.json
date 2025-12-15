@@ -1,6 +1,7 @@
 {
-    "scripts": {
-    "test": "jest"
+  "scripts": {
+    "test": "jest",
+    "prepare": "husky"
   },
   "devDependencies": {
     "@commitlint/cli": "^20.2.0",
