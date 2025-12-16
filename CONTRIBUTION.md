@@ -3,10 +3,12 @@
 Obrigado por contribuir!
 
 ## 1. Padrão de Commits
+
 Use:
 <tipo>: <descrição>
 
 Tipos:
+
 - feat: nova funcionalidade
 - fix: correção de bug
 - docs: alteração em documentação
@@ -22,6 +24,7 @@ fix: corrige erro de CORS no endpoint /login
 ---
 
 ## 2. Antes de enviar o PR
+
 - Rode `npm run lint`
 - Rode `npm run format`
 - Verifique se nenhum arquivo gerado (`dist/`, `build/`) está sendo commitado.
@@ -29,6 +32,7 @@ fix: corrige erro de CORS no endpoint /login
 ---
 
 ## 3. Estrutura dos diretórios
+
 - `/api`: código backend
 - `/web`: frontend
 - `/shared`: utilidades, tipos e código compartilhado

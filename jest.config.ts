@@ -1,4 +1,4 @@
-import type { Config } from 'jest';
+import type { Config } from 'jest'
 
 const config: Config = {
   // Usa ts-jest para TypeScript
@@ -11,10 +11,7 @@ const config: Config = {
   roots: ['<rootDir>/Shared', '<rootDir>/Api', '<rootDir>/Web'],
 
   // Padrão de arquivos de teste
-  testMatch: [
-    '**/__tests__/**/*.spec.ts',
-    '**/?(*.)+(spec|test).ts',
-  ],
+  testMatch: ['**/__tests__/**/*.spec.ts', '**/?(*.)+(spec|test).ts'],
 
   // Suporte a path aliases (ex: @modules, @shared)
   moduleNameMapper: {
@@ -47,6 +44,6 @@ const config: Config = {
 
   // Evita que testes lentos travem o CI
   testTimeout: 10000,
-};
+}
 
-export default config;
+export default config
