@@ -1,11 +1,12 @@
-export type TaskStatus = 'Pendente' | 'Em Andamento' | 'Concluída'
-
+import { TaskStatus, TaskPrioridade } from './taskEnums'
 export interface TaskPropriedades {
   id: number
   titulo: string
   descricao: string
   taskStatus?: TaskStatus
+  taskPrioridade?: TaskPrioridade
   dataCriacao?: Date
+  dataFinal?: Date
 }
 
 export class Task {
@@ -13,14 +14,18 @@ export class Task {
   private titulo: string
   private descricao: string
   private taskStatus: TaskStatus
+  private taskPrioridade: TaskPrioridade
   private dataCriacao: Date
+  private dataFinal: Date
 
   constructor(props: TaskPropriedades) {
     this.id = props.id
     this.titulo = props.titulo
     this.descricao = props.descricao
-    this.taskStatus = props.taskStatus ?? 'Pendente'
+    this.taskStatus = props.taskStatus ?? TaskStatus.Pendente
+    this.taskPrioridade = props.taskPrioridade ?? TaskPrioridade.SemPrioridade
     this.dataCriacao = props.dataCriacao ?? new Date()
+    this.dataFinal = props.dataFinal ?? new Date()
   }
 
   public getId(): number {
@@ -39,24 +44,32 @@ export class Task {
     return this.taskStatus
   }
 
+  public getTaskPrioridade(): TaskPrioridade {
+    return this.taskPrioridade
+  }
+
   public getDataCriacao(): Date {
     return this.dataCriacao
   }
 
+  public getDataFinal(): Date {
+    return this.dataFinal
+  }
+
   public setStatusEmAndamento(): void {
-    if (this.taskStatus != 'Pendente') {
+    if (this.taskStatus != TaskStatus.Pendente) {
       throw new Error('Apenas tarefas pendentes podem ser iniciadas')
     }
 
-    this.taskStatus = 'Em Andamento'
+    this.taskStatus = TaskStatus.EmAndamento
   }
 
   public setStatusConcluido(): void {
-    if (this.taskStatus != 'Em Andamento') {
+    if (this.taskStatus != TaskStatus.EmAndamento) {
       throw new Error('Apenas tarefas em andamento podem ser concluidas')
     }
 
-    this.taskStatus = 'Concluída'
+    this.taskStatus = TaskStatus.Concluida
   }
 
   public alteraTituloTask(novoTitulo: string): void {
