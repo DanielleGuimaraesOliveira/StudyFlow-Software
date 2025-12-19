@@ -1,7 +1,6 @@
-import { TaskRepository, TaskService } from "./TaskService";
-import { Task } from "../../../Shared/Dominio/Task/task";
-import { TaskPrioridade, TaskStatus } from "../../../Shared/Dominio/Task/taskEnums";
-
+import { TaskRepository, TaskService } from './TaskService'
+import { Task } from '../../../Shared/Dominio/Task/task'
+import { TaskPrioridade, TaskStatus } from '../../../Shared/Dominio/Task/taskEnums'
 
 describe('TaskService', () => {
   const criaTask = (id: number) => new Task({ id, titulo: 'Teste', descricao: 'Desc' })
@@ -46,7 +45,7 @@ describe('TaskService', () => {
     await expect(taskService.obterTaskPorId(2)).rejects.toThrow('Task com ID 2 não encontrada')
   })
 
-  it('Deve retornar uma lista de Tasks', async ()=>{
+  it('Deve retornar uma lista de Tasks', async () => {
     const listaTask = [criaTask(1)]
     taskRepositoryMock.listarTodas.mockResolvedValue(listaTask)
     const resultado = await taskService.listarTasks()
