@@ -183,11 +183,46 @@ describe('Task', () => {
     expect(task.getId()).toBe(11)
     expect(task.getTitulo()).toBe('Estudar Go')
     expect(() => task.alteraTituloTask('ab')).toThrow(
-      'Apenas titulos com mais de 3 letras podem ser criados'
+      'Titulo é obrigatório e deve ter pelo menos 3 caracteres'
     )
     expect(task.getTitulo()).toBe('Estudar Go')
     expect(task.getTaskStatus()).toBe(TaskStatus.EmAndamento)
     expect(task.getDataCriacao()).toBe(dataCriacao)
+  })
+
+  it('Deve apresentar um erro ao criar task sem titulo', () => {
+    expect(() => {
+      new Task({
+        id: 12,
+        titulo: '',
+        descricao: 'Descrição',
+      })
+    }).toThrow('Titulo é obrigatório e deve ter pelo menos 3 caracteres')
+  })
+
+  it('Deve criar uma task sem descrição', () => {
+    const task = new Task({
+      id: 13,
+      titulo: 'Estudar Rust',
+    })
+
+    expect(task.getId()).toBe(13)
+    expect(task.getTitulo()).toBe('Estudar Rust')
+    expect(task.getDescricao()).toBe('')
+    expect(task.getTaskStatus()).toBe(TaskStatus.Pendente)
+    expect(task.getTaskPrioridade()).toBe(TaskPrioridade.SemPrioridade)
+  })
+
+  it('Deve permitir alterar a descrição da tarefa', () => {
+    const task = new Task({
+      id: 14,
+      titulo: 'Estudar Kotlin',
+      descricao: 'Descrição inicial',
+    })
+
+    expect(task.getDescricao()).toBe('Descrição inicial')
+    task.alteraDescricaoTask('Nova descrição')
+    expect(task.getDescricao()).toBe('Nova descrição')
   })
 
   it('Deve criar atributo de data final da task como o padrão', () => {
