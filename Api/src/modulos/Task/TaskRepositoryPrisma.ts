@@ -1,8 +1,8 @@
 // Api/Repositories/TaskRepositoryPrisma.ts
 import { PrismaClient, Task as PrismaTask } from '@prisma/client'
-import { Task } from '../../Shared/Dominio/Task/task'
-import { TaskPrioridade, TaskStatus } from '../../Shared/Dominio/Task/taskEnums'
-import { TaskRepository } from '../Services/Task/TaskService'
+import { Task } from '../../../../Shared/Dominio/Task/task'
+import { TaskPrioridade, TaskStatus } from '../../../../Shared/Dominio/Task/taskEnums'
+import { TaskRepository } from './TaskService'
 
 export class TaskRepositoryPrisma implements TaskRepository {
   private prisma = new PrismaClient()

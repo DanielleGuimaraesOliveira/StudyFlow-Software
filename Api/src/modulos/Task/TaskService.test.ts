@@ -1,6 +1,6 @@
 import { TaskRepository, TaskService } from './TaskService'
-import { Task } from '../../../Shared/Dominio/Task/task'
-import { TaskPrioridade, TaskStatus } from '../../../Shared/Dominio/Task/taskEnums'
+import { Task } from '../../../../Shared/Dominio/Task/task'
+import { TaskPrioridade, TaskStatus } from '../../../../Shared/Dominio/Task/taskEnums'
 
 describe('TaskService', () => {
   const criaTask = (id: number, status: TaskStatus = TaskStatus.Pendente) =>
