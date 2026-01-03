@@ -19,11 +19,6 @@ export class Task {
   private dataFinal: Date
 
   constructor(props: TaskPropriedades) {
-    // Validação: título é obrigatório e mínimo 3 caracteres
-    if (!props.titulo || props.titulo.trim().length < 3) {
-      throw new Error('Titulo é obrigatório e deve ter pelo menos 3 caracteres')
-    }
-
     this.id = props.id
     this.titulo = props.titulo.trim()
     this.descricao = props.descricao?.trim() ?? ''
@@ -31,6 +26,21 @@ export class Task {
     this.taskPrioridade = props.taskPrioridade ?? TaskPrioridade.SemPrioridade
     this.dataCriacao = props.dataCriacao ?? new Date()
     this.dataFinal = props.dataFinal ?? new Date()
+    if (!props.titulo || props.titulo.trim() == '') {
+      throw new Error('Titulo é obrigatório')
+    }
+
+    if (props.titulo.length < 3) {
+      throw new Error('Titulo tem que ter no minimo 3 caracteres')
+    }
+
+    if (props.titulo.length > 100) {
+      throw new Error('Titulo tem que ter no máximo 100 caracteres')
+    }
+
+    if (this.dataFinal < this.dataCriacao) {
+      throw new Error('Data final não pode ser anterior à data de criação')
+    }
   }
 
   public getId(): number {
@@ -80,6 +90,10 @@ export class Task {
   public alteraTituloTask(novoTitulo: string): void {
     if (!novoTitulo || novoTitulo.trim().length < 3) {
       throw new Error('Titulo é obrigatório e deve ter pelo menos 3 caracteres')
+    }
+
+    if (novoTitulo.trim().length > 100) {
+      throw new Error('Titulo tem que ter no máximo 100 caracteres')
     }
 
     this.titulo = novoTitulo.trim()
