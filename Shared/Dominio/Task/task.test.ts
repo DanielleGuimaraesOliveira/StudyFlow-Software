@@ -26,7 +26,7 @@ describe('Task', () => {
 
   it('Deve criar data de criação da task como o padrão', () => {
     const dataAntiga = new Date()
-    const dataFinal = new Date('2025-06-01')
+    const dataFinal = new Date('2027-06-01') // Data no futuro
     const task = new Task({
       id: 2,
       titulo: 'Fazer exercícios',
@@ -190,6 +190,52 @@ describe('Task', () => {
     expect(task.getDataCriacao()).toBe(dataCriacao)
   })
 
+  it('Deve apresentar um erro ao alterar titulo para mais de 100 caracteres', () => {
+    const dataCriacao = new Date('2020-06-12')
+    const dataFinal = new Date('2025-01-01')
+    const task = new Task({
+      id: 11,
+      titulo: 'Estudar Go',
+      descricao: 'Ler a documentação oficial do Go',
+      dataCriacao: dataCriacao,
+      taskPrioridade: TaskPrioridade.Alta,
+      taskStatus: TaskStatus.EmAndamento,
+      dataFinal: dataFinal,
+    })
+
+    expect(task.getId()).toBe(11)
+    expect(task.getTitulo()).toBe('Estudar Go')
+    expect(() =>
+      task.alteraTituloTask(
+        'Implementar fluxo completoo de criação  e retorno  de tarefas com tratamento de erros, logs detalhados '
+      )
+    ).toThrow('Titulo tem que ter no máximo 100 caracteres')
+    expect(task.getTitulo()).toBe('Estudar Go')
+    expect(task.getTaskStatus()).toBe(TaskStatus.EmAndamento)
+    expect(task.getDataCriacao()).toBe(dataCriacao)
+  })
+
+  it('Deve apresentar um erro ao criar task com mais de 100 caracteres', () => {
+    expect(
+      () =>
+        new Task({
+          id: 2,
+          titulo:
+            'Implementar fluxo completo de criação e retorno  de tarefas com tratamento de erros, logs detalhados ',
+        })
+    ).toThrow('Titulo tem que ter no máximo 100 caracteres')
+  })
+
+  it('Deve apresentar um erro ao criar task com menos de 3 caracteres', () => {
+    expect(
+      () =>
+        new Task({
+          id: 2,
+          titulo: 'Im',
+        })
+    ).toThrow('Titulo tem que ter no minimo 3 caracteres')
+  })
+
   it('Deve apresentar um erro ao criar task sem titulo', () => {
     expect(() => {
       new Task({
@@ -197,7 +243,7 @@ describe('Task', () => {
         titulo: '',
         descricao: 'Descrição',
       })
-    }).toThrow('Titulo é obrigatório e deve ter pelo menos 3 caracteres')
+    }).toThrow('Titulo é obrigatório')
   })
 
   it('Deve criar uma task sem descrição', () => {
@@ -227,7 +273,7 @@ describe('Task', () => {
 
   it('Deve criar atributo de data final da task como o padrão', () => {
     const dataAntiga = new Date()
-    const dataCriacao = new Date('2025-06-01')
+    const dataCriacao = new Date('2024-06-01') // Data no passado
     const task = new Task({
       id: 7,
       titulo: 'Fazer exercícios',
