@@ -52,6 +52,10 @@ export class TaskController {
       res.status(200).json(tasks)
     } catch (error) {
       const mensagem = (error as Error).message
+      if (mensagem.includes('não encontrada')) {
+        res.status(404).json({ erro: mensagem })
+        return
+      }
     }
   }
 }
