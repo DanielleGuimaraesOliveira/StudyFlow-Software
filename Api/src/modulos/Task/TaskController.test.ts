@@ -74,7 +74,7 @@ describe('TaskController', () => {
 
     it('Deve lançar um erro ao criar uma task com menos de 3 caracteres', async () => {
       taskServiceMock.criarTask.mockRejectedValue(
-        new Error('Titulo tem que ter no minimo 3 caracteres e no máximo 100 ')
+        new Error('Titulo tem que ter no minimo 3 caracteres')
       )
 
       reqMock.body = { titulo: '1a', descricao: 'descricao' }
@@ -83,7 +83,7 @@ describe('TaskController', () => {
 
       expect(resMock.status).toHaveBeenCalledWith(400)
       expect(resMock.json).toHaveBeenCalledWith({
-        erro: 'Titulo tem que ter no minimo 3 caracteres e no máximo 100 ',
+        erro: 'Titulo tem que ter no minimo 3 caracteres',
       })
     })
   })
