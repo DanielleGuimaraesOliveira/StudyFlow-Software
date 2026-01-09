@@ -1,3 +1,4 @@
+import 'dotenv/config'
 import express from 'express'
 import { TaskController } from './src/modulos/Task/TaskController'
 import { TaskService } from './src/modulos/Task/TaskService'
@@ -16,4 +17,7 @@ const taskController = new TaskController(service)
 
 app.post('/tasks', (req, res) => taskController.criaTask(req, res))
 
-app.listen(3000, () => {})
+app.listen(3000, () => {
+  // eslint-disable-next-line no-console
+  console.log('Servidor rodando na porta 3000')
+})
