@@ -11,7 +11,7 @@ describe('TaskController', () => {
   let taskServiceMock: jest.Mocked<TaskService>
   let taskController: TaskController
   let resMock: Partial<Response>
-  let reqMock: Partial<Request>
+  let reqMock: Partial<Request & { params: { id?: string } }>
 
   beforeEach(() => {
     taskServiceMock = {
@@ -87,4 +87,196 @@ describe('TaskController', () => {
       })
     })
   })
+
+  describe('ObterTaskPorId', () => {
+    it('Deve obter uma task por id com sucesso', async () => {
+      const taskCriada = criaTask(1)
+      taskServiceMock.obterTaskPorId.mockResolvedValue(taskCriada)
+
+      reqMock.params = { id: '1' }
+
+      await taskController.obterTaskPorId(reqMock as Request, resMock as Response)
+
+      expect(resMock.status).toHaveBeenCalledWith(200)
+      expect(resMock.json).toHaveBeenCalledWith(taskCriada)
+    })
+
+    it('Deve retornar um erro ao não encontrar uma task por id', async () => {
+      taskServiceMock.obterTaskPorId.mockRejectedValue(new Error('Task com ID 1 não encontrada'))
+      reqMock.params = { id: '1' }
+
+      await taskController.obterTaskPorId(reqMock as Request, resMock as Response)
+      expect(resMock.status).toHaveBeenCalledWith(404)
+      expect(resMock.json).toHaveBeenCalledWith({ erro: 'Task com ID 1 não encontrada' })
+    })
+
+    it('Deve o ocorrer um erro inesperado', async () => {
+      taskServiceMock.obterTaskPorId.mockRejectedValue(
+        new Error('Falha na conexão com o Banco de dados')
+      )
+      reqMock.params = { id: '3' }
+
+      await taskController.obterTaskPorId(reqMock as Request, resMock as Response)
+
+      expect(resMock.status).toHaveBeenCalledWith(500)
+      expect(resMock.json).toHaveBeenCalledWith({ erro: 'Erro interno do servidor' })
+    })
+  })
+
+  describe('ListarTasks', () => {
+    it('Deve listar tasks corretamente', async () => {
+      const taskCriadas = [criaTask(1), criaTask(2)]
+      taskServiceMock.listarTasks.mockResolvedValue(taskCriadas)
+
+      await taskController.listaTask(reqMock as Request, resMock as Response)
+
+      expect(resMock.status).toHaveBeenCalledWith(200)
+      expect(resMock.json).toHaveBeenCalledWith(taskCriadas)
+      expect(resMock.json).toHaveBeenCalledWith(
+        expect.arrayContaining([
+          expect.objectContaining({ id: 1 }),
+          expect.objectContaining({ id: 2 }),
+        ])
+      )
+    })
+
+    it('Deve o ocorrer um erro inesperado', async () => {
+      taskServiceMock.listarTasks.mockRejectedValue(
+        new Error('Falha na conexão com o Banco de dados')
+      )
+
+      await taskController.listaTask(reqMock as Request, resMock as Response)
+
+      expect(resMock.status).toHaveBeenCalledWith(500)
+      expect(resMock.json).toHaveBeenCalledWith({ erro: 'Erro interno do servidor' })
+    })
+  })
+
+  describe('ListarTasksPorStatus', () => {
+    it('Deve listar tasks Por status corretamente', async () => {
+      const taskCriadas = [criaTask(1, TaskStatus.Concluida), criaTask(2, TaskStatus.Pendente)]
+      taskServiceMock.listarTasksPorStatus.mockResolvedValue(taskCriadas)
+
+      await taskController.listaTaskPorStatus(reqMock as Request, resMock as Response)
+
+      expect(resMock.status).toHaveBeenCalledWith(200)
+      expect(resMock.json).toHaveBeenCalledWith(taskCriadas)
+      expect(resMock.json).toHaveBeenCalledWith(
+        expect.arrayContaining([
+          expect.objectContaining({ taskStatus: TaskStatus.Concluida }),
+          expect.objectContaining({ taskStatus: TaskStatus.Pendente }),
+        ])
+      )
+    })
+
+    it('Deve o ocorrer um erro inesperado', async () => {
+      taskServiceMock.listarTasksPorStatus.mockRejectedValue(
+        new Error('Falha na conexão com o Banco de dados')
+      )
+
+      await taskController.listaTaskPorStatus(reqMock as Request, resMock as Response)
+
+      expect(resMock.status).toHaveBeenCalledWith(500)
+      expect(resMock.json).toHaveBeenCalledWith({ erro: 'Erro interno do servidor' })
+    })
+  })
+
+  describe('iniciarTask', () => {
+    it('Deve iniciar uma task corretamente', async () => {
+      taskServiceMock.iniciarTask.mockResolvedValue(undefined)
+      reqMock.params = { id: '1' }
+
+      await taskController.iniciarTask(reqMock as Request, resMock as Response)
+
+      expect(taskServiceMock.iniciarTask).toHaveBeenCalledWith(1)
+      expect(resMock.status).toHaveBeenCalledWith(200)
+      expect(resMock.json).toHaveBeenCalled()
+    })
+
+    it('Deve retornar erro ao tentar iniciar task inexistente', async () => {
+      taskServiceMock.iniciarTask.mockRejectedValue(new Error('Task com ID 1 não encontrada'))
+      reqMock.params = { id: '1' }
+
+      await taskController.iniciarTask(reqMock as Request, resMock as Response)
+
+      expect(resMock.status).toHaveBeenCalledWith(404)
+      expect(resMock.json).toHaveBeenCalledWith({ erro: 'Task com ID 1 não encontrada' })
+    })
+
+ it('Deve retornar erro ao tentar iniciar task com status incorreto', async () => {
+   taskServiceMock.iniciarTask.mockRejectedValue(
+     new Error('Apenas tarefas pendentes podem ser iniciadas')
+   )
+   reqMock.params = { id: '1' }
+
+   await taskController.iniciarTask(reqMock as Request, resMock as Response)
+
+   expect(resMock.status).toHaveBeenCalledWith(422)
+   expect(resMock.json).toHaveBeenCalledWith({
+     erro: 'Apenas tarefas pendentes podem ser iniciadas',
+   })
+ })
+
+    it('Deve ocorrer um erro inesperado', async () => {
+      taskServiceMock.iniciarTask.mockRejectedValue(
+        new Error('Falha na conexão com o Banco de dados')
+      )
+      reqMock.params = { id: '1' }
+
+      await taskController.iniciarTask(reqMock as Request, resMock as Response)
+
+      expect(resMock.status).toHaveBeenCalledWith(500)
+      expect(resMock.json).toHaveBeenCalledWith({ erro: 'Erro interno do servidor' })
+    })
+  })
+
+  describe('concluirTask', () => {
+    it('Deve concluir uma task corretamente', async () => {
+      taskServiceMock.concluirTask.mockResolvedValue(undefined)
+      reqMock.params = { id: '1' }
+
+      await taskController.concluirTask(reqMock as Request, resMock as Response)
+
+      expect(taskServiceMock.concluirTask).toHaveBeenCalledWith(1)
+      expect(resMock.status).toHaveBeenCalledWith(200)
+      expect(resMock.json).toHaveBeenCalled()
+    })
+
+    it('Deve retornar erro ao tentar iniciar task inexistente', async () => {
+      taskServiceMock.concluirTask.mockRejectedValue(new Error('Task com ID 1 não encontrada'))
+      reqMock.params = { id: '1' }
+
+      await taskController.concluirTask(reqMock as Request, resMock as Response)
+
+      expect(resMock.status).toHaveBeenCalledWith(404)
+      expect(resMock.json).toHaveBeenCalledWith({ erro: 'Task com ID 1 não encontrada' })
+    })
+
+    it('Deve retornar erro ao tentar iniciar task com status incorreto', async () => {
+      taskServiceMock.concluirTask.mockRejectedValue(
+        new Error('Apenas tarefas em andamento podem ser concluidas')
+      )
+      reqMock.params = { id: '1' }
+
+      await taskController.concluirTask(reqMock as Request, resMock as Response)
+
+      expect(resMock.status).toHaveBeenCalledWith(422)
+      expect(resMock.json).toHaveBeenCalledWith({
+        erro: 'Apenas tarefas em andamento podem ser concluidas',
+      })
+    })
+
+    it('Deve ocorrer um erro inesperado', async () => {
+      taskServiceMock.concluirTask.mockRejectedValue(
+        new Error('Falha na conexão com o Banco de dados')
+      )
+      reqMock.params = { id: '1' }
+
+      await taskController.concluirTask(reqMock as Request, resMock as Response)
+
+      expect(resMock.status).toHaveBeenCalledWith(500)
+      expect(resMock.json).toHaveBeenCalledWith({ erro: 'Erro interno do servidor' })
+    })
+  })
+
 })
