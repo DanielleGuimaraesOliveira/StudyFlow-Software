@@ -1,5 +1,6 @@
 import { Request, Response } from 'express'
 import { CriarTaskDTO, TaskService } from './TaskService'
+import { TaskStatus } from '../../../../Shared/Dominio/Task/taskEnums'
 export class TaskController {
   constructor(private readonly taskService: TaskService) {}
 
@@ -40,8 +41,6 @@ export class TaskController {
         return
       }
 
-      // eslint-disable-next-line no-console
-      console.error('Erro inesperado:', error)
       res.status(500).json({ erro: 'Erro interno do servidor' })
     }
   }
@@ -51,11 +50,60 @@ export class TaskController {
       const tasks = await this.taskService.listarTasks()
       res.status(200).json(tasks)
     } catch (error) {
+      res.status(500).json({ erro: 'Erro interno do servidor' })
+    }
+  }
+
+  async listaTaskPorStatus(req: Request, res: Response): Promise<void> {
+    try {
+      const statusDaTask = req.params.taskStatus as TaskStatus
+      const listaDeTasks = await this.taskService.listarTasksPorStatus(statusDaTask)
+      res.status(200).json(listaDeTasks)
+      return
+    } catch (erro) {
+      res.status(500).json({ erro: 'Erro interno do servidor' })
+    }
+  }
+
+  async iniciarTask(req: Request, res: Response): Promise<void> {
+    try {
+      const id = parseInt(req.params.id)
+      const task = await this.taskService.iniciarTask(id)
+      res.status(200).json(task)
+      return
+    } catch (error) {
       const mensagem = (error as Error).message
+
       if (mensagem.includes('não encontrada')) {
         res.status(404).json({ erro: mensagem })
         return
       }
+      if (mensagem.includes('tarefas pendentes')) {
+        res.status(422).json({ erro: mensagem })
+        return
+      }
+      res.status(500).json({ erro: 'Erro interno do servidor' })
+    }
+  }
+
+  async concluirTask(req: Request, res: Response): Promise<void> {
+    try {
+      const id = parseInt(req.params.id)
+      const task = await this.taskService.concluirTask(id)
+      res.status(200).json(task)
+      return
+    } catch (error) {
+      const mensagem = (error as Error).message
+
+      if (mensagem.includes('não encontrada')) {
+        res.status(404).json({ erro: mensagem })
+        return
+      }
+      if (mensagem.includes('tarefas em andamento')) {
+        res.status(422).json({ erro: mensagem })
+        return
+      }
+      res.status(500).json({ erro: 'Erro interno do servidor' })
     }
   }
 }
