@@ -51,12 +51,15 @@ export class TaskService {
 
   async iniciarTask(id: number): Promise<void> {
     const task = await this.obterTaskPorId(id)
+    if (!task) throw new Error(`Task com ID ${id} não encontrada`)
+
     task.setStatusEmAndamento()
     await this.taskRepository.atualizar(task)
   }
 
   async concluirTask(id: number): Promise<void> {
     const task = await this.obterTaskPorId(id)
+    if (!task) throw new Error(`Task com ID ${id} não encontrada`)
     task.setStatusConcluido()
     await this.taskRepository.atualizar(task)
   }
