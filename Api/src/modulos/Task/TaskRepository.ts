@@ -1,6 +1,6 @@
 import 'dotenv/config'
 import { Pool } from 'pg'
-import { Task } from '../../../../Shared/Dominio/Task/task'
+import { Task } from '../../../../Shared/Dominio/Task/taskEntity'
 import { TaskPrioridade, TaskStatus } from '../../../../Shared/Dominio/Task/taskEnums'
 import { TaskRepository } from './TaskService'
 

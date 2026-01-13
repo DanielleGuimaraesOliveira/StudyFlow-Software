@@ -1,4 +1,4 @@
-import { Task } from '../../../../Shared/Dominio/Task/task'
+import { Task } from '../../../../Shared/Dominio/Task/taskEntity'
 import { TaskPrioridade, TaskStatus } from '../../../../Shared/Dominio/Task/taskEnums'
 
 export interface CriarTaskDTO {

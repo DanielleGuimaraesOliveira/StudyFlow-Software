@@ -1,5 +1,5 @@
 import { TaskRepository, TaskService } from './TaskService'
-import { Task } from '../../../../Shared/Dominio/Task/task'
+import { Task } from '../../../../Shared/Dominio/Task/taskEntity'
 import { TaskStatus } from '../../../../Shared/Dominio/Task/taskEnums'
 
 describe('TaskService', () => {

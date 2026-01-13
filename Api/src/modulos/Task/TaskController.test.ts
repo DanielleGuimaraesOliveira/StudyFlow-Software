@@ -1,7 +1,7 @@
 import { TaskService } from './TaskService'
 import { Request, Response } from 'express'
 import { TaskController } from './TaskController'
-import { Task } from '../../../../Shared/Dominio/Task/task'
+import { Task } from '../../../../Shared/Dominio/Task/taskEntity'
 import { TaskStatus } from '../../../../Shared/Dominio/Task/taskEnums'
 
 describe('TaskController', () => {
@@ -110,7 +110,7 @@ describe('TaskController', () => {
       expect(resMock.json).toHaveBeenCalledWith({ erro: 'Task com ID 1 não encontrada' })
     })
 
-    it('Deve o ocorrer um erro inesperado', async () => {
+    it('Deve o ocorrer um erro inesperado ao obter task por id', async () => {
       taskServiceMock.obterTaskPorId.mockRejectedValue(
         new Error('Falha na conexão com o Banco de dados')
       )
@@ -140,7 +140,7 @@ describe('TaskController', () => {
       )
     })
 
-    it('Deve o ocorrer um erro inesperado', async () => {
+    it('Deve o ocorrer um erro inesperado ao listar tasks', async () => {
       taskServiceMock.listarTasks.mockRejectedValue(
         new Error('Falha na conexão com o Banco de dados')
       )
@@ -169,7 +169,7 @@ describe('TaskController', () => {
       )
     })
 
-    it('Deve o ocorrer um erro inesperado', async () => {
+    it('Deve o ocorrer um erro inesperado ao listar tasks por status', async () => {
       taskServiceMock.listarTasksPorStatus.mockRejectedValue(
         new Error('Falha na conexão com o Banco de dados')
       )
@@ -203,21 +203,21 @@ describe('TaskController', () => {
       expect(resMock.json).toHaveBeenCalledWith({ erro: 'Task com ID 1 não encontrada' })
     })
 
- it('Deve retornar erro ao tentar iniciar task com status incorreto', async () => {
-   taskServiceMock.iniciarTask.mockRejectedValue(
-     new Error('Apenas tarefas pendentes podem ser iniciadas')
-   )
-   reqMock.params = { id: '1' }
+    it('Deve retornar erro ao tentar iniciar task com status incorreto', async () => {
+      taskServiceMock.iniciarTask.mockRejectedValue(
+        new Error('Apenas tarefas pendentes podem ser iniciadas')
+      )
+      reqMock.params = { id: '1' }
 
-   await taskController.iniciarTask(reqMock as Request, resMock as Response)
+      await taskController.iniciarTask(reqMock as Request, resMock as Response)
 
-   expect(resMock.status).toHaveBeenCalledWith(422)
-   expect(resMock.json).toHaveBeenCalledWith({
-     erro: 'Apenas tarefas pendentes podem ser iniciadas',
-   })
- })
+      expect(resMock.status).toHaveBeenCalledWith(422)
+      expect(resMock.json).toHaveBeenCalledWith({
+        erro: 'Apenas tarefas pendentes podem ser iniciadas',
+      })
+    })
 
-    it('Deve ocorrer um erro inesperado', async () => {
+    it('Deve ocorrer um erro inesperado ao iniciar a task', async () => {
       taskServiceMock.iniciarTask.mockRejectedValue(
         new Error('Falha na conexão com o Banco de dados')
       )
@@ -242,7 +242,7 @@ describe('TaskController', () => {
       expect(resMock.json).toHaveBeenCalled()
     })
 
-    it('Deve retornar erro ao tentar iniciar task inexistente', async () => {
+    it('Deve retornar erro ao tentar concluir task inexistente', async () => {
       taskServiceMock.concluirTask.mockRejectedValue(new Error('Task com ID 1 não encontrada'))
       reqMock.params = { id: '1' }
 
@@ -252,7 +252,7 @@ describe('TaskController', () => {
       expect(resMock.json).toHaveBeenCalledWith({ erro: 'Task com ID 1 não encontrada' })
     })
 
-    it('Deve retornar erro ao tentar iniciar task com status incorreto', async () => {
+    it('Deve retornar erro ao tentar concluir task com status incorreto', async () => {
       taskServiceMock.concluirTask.mockRejectedValue(
         new Error('Apenas tarefas em andamento podem ser concluidas')
       )
@@ -266,7 +266,7 @@ describe('TaskController', () => {
       })
     })
 
-    it('Deve ocorrer um erro inesperado', async () => {
+    it('Deve ocorrer um erro inesperado ao concluir a task', async () => {
       taskServiceMock.concluirTask.mockRejectedValue(
         new Error('Falha na conexão com o Banco de dados')
       )
@@ -278,5 +278,4 @@ describe('TaskController', () => {
       expect(resMock.json).toHaveBeenCalledWith({ erro: 'Erro interno do servidor' })
     })
   })
-
 })

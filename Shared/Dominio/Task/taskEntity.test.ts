@@ -1,4 +1,4 @@
-import { Task } from './task'
+import { Task } from './taskEntity'
 import { TaskStatus, TaskPrioridade } from './taskEnums'
 
 describe('Task', () => {
