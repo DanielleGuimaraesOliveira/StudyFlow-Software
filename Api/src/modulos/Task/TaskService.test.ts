@@ -3,8 +3,12 @@ import { Task } from '../../../../Shared/Dominio/Task/taskEntity'
 import { TaskStatus } from '../../../../Shared/Dominio/Task/taskEnums'
 
 describe('TaskService', () => {
-  const criaTask = (id: number, status: TaskStatus = TaskStatus.Pendente, titulo: string = 'Teste', descricao: string = 'Desc') =>
-    new Task({ id, titulo, descricao, taskStatus: status })
+  const criaTask = (
+    id: number,
+    status: TaskStatus = TaskStatus.Pendente,
+    titulo: string = 'Teste',
+    descricao: string = 'Desc'
+  ) => new Task({ id, titulo, descricao, taskStatus: status })
   let taskService: TaskService
   let taskRepositoryMock: jest.Mocked<TaskRepository>
 
@@ -171,7 +175,7 @@ describe('TaskService', () => {
 
   it('Deve alterar a descrição de uma task corretamente', async () => {
     const taskCriada = criaTask(1)
-    const taskCriadaAtualizada = criaTask(1, TaskStatus.Pendente,'Teste','novaDescrição' )
+    const taskCriadaAtualizada = criaTask(1, TaskStatus.Pendente, 'Teste', 'novaDescrição')
     taskRepositoryMock.buscarPorId.mockResolvedValue(taskCriada)
     taskRepositoryMock.atualizar.mockResolvedValue(taskCriadaAtualizada)
 
