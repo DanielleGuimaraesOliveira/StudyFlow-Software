@@ -3,8 +3,8 @@ import { Task } from '../../../../Shared/Dominio/Task/taskEntity'
 import { TaskStatus } from '../../../../Shared/Dominio/Task/taskEnums'
 
 describe('TaskService', () => {
-  const criaTask = (id: number, status: TaskStatus = TaskStatus.Pendente) =>
-    new Task({ id, titulo: 'Teste', descricao: 'Desc', taskStatus: status })
+  const criaTask = (id: number, status: TaskStatus = TaskStatus.Pendente, titulo: string = 'Teste', descricao: string = 'Desc') =>
+    new Task({ id, titulo, descricao, taskStatus: status })
   let taskService: TaskService
   let taskRepositoryMock: jest.Mocked<TaskRepository>
 
@@ -69,7 +69,7 @@ describe('TaskService', () => {
     const taskCriada = criaTask(1)
 
     taskRepositoryMock.buscarPorId.mockResolvedValue(taskCriada)
-    taskRepositoryMock.atualizar.mockResolvedValue()
+    taskRepositoryMock.atualizar.mockResolvedValue(taskCriada)
 
     await taskService.iniciarTask(1)
 
@@ -102,8 +102,9 @@ describe('TaskService', () => {
 
   it('Deve concluir uma tarefa e atualizar ela corretamente', async () => {
     const taskCriada = criaTask(1, TaskStatus.EmAndamento)
+    const taskCriadaMock = criaTask(1, TaskStatus.Concluida)
     taskRepositoryMock.buscarPorId.mockResolvedValue(taskCriada)
-    taskRepositoryMock.atualizar.mockResolvedValue()
+    taskRepositoryMock.atualizar.mockResolvedValue(taskCriadaMock)
 
     await taskService.concluirTask(1)
 
@@ -133,8 +134,9 @@ describe('TaskService', () => {
 
   it('Deve alterar o titulo de uma task corretamente', async () => {
     const taskCriada = criaTask(1)
+    const taskCriadaAtualizada = criaTask(1, TaskStatus.Pendente, 'novoTitulo')
     taskRepositoryMock.buscarPorId.mockResolvedValue(taskCriada)
-    taskRepositoryMock.atualizar.mockResolvedValue()
+    taskRepositoryMock.atualizar.mockResolvedValue(taskCriadaAtualizada)
 
     await taskService.alterarTituloTask(1, 'novoTitulo')
 
@@ -169,8 +171,9 @@ describe('TaskService', () => {
 
   it('Deve alterar a descrição de uma task corretamente', async () => {
     const taskCriada = criaTask(1)
+    const taskCriadaAtualizada = criaTask(1, TaskStatus.Pendente,'Teste','novaDescrição' )
     taskRepositoryMock.buscarPorId.mockResolvedValue(taskCriada)
-    taskRepositoryMock.atualizar.mockResolvedValue()
+    taskRepositoryMock.atualizar.mockResolvedValue(taskCriadaAtualizada)
 
     await taskService.alterarDescricaoTask(1, 'novaDescrição')
 

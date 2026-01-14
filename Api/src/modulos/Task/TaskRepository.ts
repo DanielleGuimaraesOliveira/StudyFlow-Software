@@ -60,7 +60,7 @@ export class TaskRepositoryPrisma implements TaskRepository {
     return result.rows.map((row) => this.toDomain(row))
   }
 
-  async atualizar(task: Task): Promise<void> {
+  async atualizar(task: Task): Promise<Task> {
     const query = `
       UPDATE tasks 
       SET titulo = $1, descricao = $2, status = $3, prioridade = $4, 
@@ -76,7 +76,8 @@ export class TaskRepositoryPrisma implements TaskRepository {
       task.getDataFinal(),
       task.getId(),
     ]
-    await this.pool.query(query, values)
+    const resultado = await this.pool.query(query, values)
+    return this.toDomain(resultado.rows[0])
   }
 
   async deletar(id: number): Promise<void> {

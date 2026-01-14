@@ -106,4 +106,8 @@ export class TaskController {
       res.status(500).json({ erro: 'Erro interno do servidor' })
     }
   }
+
+  async alterarTituloTask(req: Request, res: Response): Promise<void>{
+    
+  }
 }

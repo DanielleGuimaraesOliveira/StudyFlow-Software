@@ -183,14 +183,15 @@ describe('TaskController', () => {
 
   describe('iniciarTask', () => {
     it('Deve iniciar uma task corretamente', async () => {
-      taskServiceMock.iniciarTask.mockResolvedValue(undefined)
-      reqMock.params = { id: '1' }
+      const taskCriada = criaTask(1, TaskStatus.EmAndamento)
+      taskServiceMock.iniciarTask.mockResolvedValue(taskCriada)
+      reqMock.params = { id: '1', taskStatus: TaskStatus.Pendente }
 
       await taskController.iniciarTask(reqMock as Request, resMock as Response)
 
-      expect(taskServiceMock.iniciarTask).toHaveBeenCalledWith(1)
       expect(resMock.status).toHaveBeenCalledWith(200)
-      expect(resMock.json).toHaveBeenCalled()
+      expect(resMock.json).toHaveBeenCalledWith(taskCriada)
+      expect(resMock.json).toHaveBeenCalledWith(expect.objectContaining({'taskStatus': 'Em Andamento'}))
     })
 
     it('Deve retornar erro ao tentar iniciar task inexistente', async () => {
@@ -232,14 +233,15 @@ describe('TaskController', () => {
 
   describe('concluirTask', () => {
     it('Deve concluir uma task corretamente', async () => {
-      taskServiceMock.concluirTask.mockResolvedValue(undefined)
+      const taskCriada = criaTask(1, TaskStatus.Concluida)
+      taskServiceMock.concluirTask.mockResolvedValue(taskCriada)
       reqMock.params = { id: '1' }
 
       await taskController.concluirTask(reqMock as Request, resMock as Response)
 
-      expect(taskServiceMock.concluirTask).toHaveBeenCalledWith(1)
       expect(resMock.status).toHaveBeenCalledWith(200)
-      expect(resMock.json).toHaveBeenCalled()
+      expect(resMock.json).toHaveBeenCalledWith(taskCriada)
+      expect(resMock.json).toHaveBeenCalledWith(expect.objectContaining({taskStatus: TaskStatus.Concluida}))
     })
 
     it('Deve retornar erro ao tentar concluir task inexistente', async () => {

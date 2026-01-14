@@ -15,7 +15,7 @@ export interface TaskRepository {
   buscarPorId(id: number): Promise<Task | null>
   listarTodas(): Promise<Task[]>
   listarPorStatus(status: TaskStatus): Promise<Task[]>
-  atualizar(task: Task): Promise<void>
+  atualizar(task: Task): Promise<Task>
   deletar(id: number): Promise<void>
 }
 
@@ -49,19 +49,19 @@ export class TaskService {
     return this.taskRepository.listarPorStatus(status)
   }
 
-  async iniciarTask(id: number): Promise<void> {
+  async iniciarTask(id: number): Promise<Task> {
     const task = await this.obterTaskPorId(id)
     if (!task) throw new Error(`Task com ID ${id} não encontrada`)
 
     task.setStatusEmAndamento()
-    await this.taskRepository.atualizar(task)
+   return await this.taskRepository.atualizar(task)
   }
 
-  async concluirTask(id: number): Promise<void> {
+  async concluirTask(id: number): Promise<Task> {
     const task = await this.obterTaskPorId(id)
     if (!task) throw new Error(`Task com ID ${id} não encontrada`)
     task.setStatusConcluido()
-    await this.taskRepository.atualizar(task)
+    return await this.taskRepository.atualizar(task)
   }
 
   async alterarTituloTask(id: number, novoTitulo: string): Promise<void> {
