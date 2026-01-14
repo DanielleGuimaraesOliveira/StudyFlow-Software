@@ -107,7 +107,27 @@ export class TaskController {
     }
   }
 
-  async alterarTituloTask(req: Request, res: Response): Promise<void>{
-    
+  async alterarTituloTask(req: Request, res: Response): Promise<void> {
+    try {
+      const id = parseInt(req.params.id)
+      const titulo = req.params.titulo
+      const task = await this.taskService.alterarTituloTask(id, titulo)
+      res.status(200).json(task)
+      return
+    } catch (error) {
+      const mensagem = (error as Error).message
+
+      if (mensagem.includes('não encontrada')) {
+        res.status(404).json({ erro: mensagem })
+        return
+      }
+
+      if (mensagem.includes('obrigatório') || mensagem.includes('tem que ter')) {
+        res.status(422).json({ erro: mensagem })
+        return
+      }
+
+      res.status(500).json({ erro: 'Erro interno do servidor' })
+    }
   }
 }
