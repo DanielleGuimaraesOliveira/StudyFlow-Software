@@ -88,8 +88,11 @@ export class Task {
   }
 
   public alteraTituloTask(novoTitulo: string): void {
-    if (!novoTitulo || novoTitulo.trim().length < 3) {
-      throw new Error('Titulo é obrigatório e deve ter pelo menos 3 caracteres')
+    if (!novoTitulo.trim()) {
+      throw new Error('Titulo é obrigatório')
+    }
+    if (novoTitulo.trim().length < 3) {
+      throw new Error('Titulo tem que ter pelo menos 3 caracteres')
     }
 
     if (novoTitulo.trim().length > 100) {
