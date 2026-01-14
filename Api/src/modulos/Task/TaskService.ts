@@ -54,7 +54,7 @@ export class TaskService {
     if (!task) throw new Error(`Task com ID ${id} não encontrada`)
 
     task.setStatusEmAndamento()
-   return await this.taskRepository.atualizar(task)
+    return await this.taskRepository.atualizar(task)
   }
 
   async concluirTask(id: number): Promise<Task> {
@@ -64,10 +64,11 @@ export class TaskService {
     return await this.taskRepository.atualizar(task)
   }
 
-  async alterarTituloTask(id: number, novoTitulo: string): Promise<void> {
+  async alterarTituloTask(id: number, novoTitulo: string): Promise<Task> {
     const task = await this.obterTaskPorId(id)
+    if (!task) throw new Error(`Task com ID ${id} não encontrada`)
     task.alteraTituloTask(novoTitulo)
-    await this.taskRepository.atualizar(task)
+    return await this.taskRepository.atualizar(task)
   }
 
   async alterarDescricaoTask(id: number, novaDescricao: string): Promise<void> {
