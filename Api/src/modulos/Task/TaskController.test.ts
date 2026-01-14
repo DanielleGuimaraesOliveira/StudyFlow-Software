@@ -5,13 +5,17 @@ import { Task } from '../../../../Shared/Dominio/Task/taskEntity'
 import { TaskStatus } from '../../../../Shared/Dominio/Task/taskEnums'
 
 describe('TaskController', () => {
-  const criaTask = (id: number, taskStatus: TaskStatus = TaskStatus.Pendente) =>
-    new Task({ id, taskStatus, titulo: 'Teste', descricao: 'Desc' }) as Task
+  const criaTask = (
+    id: number,
+    status: TaskStatus = TaskStatus.Pendente,
+    titulo: string = 'Teste',
+    descricao: string = 'Desc'
+  ) => new Task({ id, titulo, descricao, taskStatus: status })
 
   let taskServiceMock: jest.Mocked<TaskService>
   let taskController: TaskController
   let resMock: Partial<Response>
-  let reqMock: Partial<Request & { params: { id?: string } }>
+  let reqMock: Partial<Request>
 
   beforeEach(() => {
     taskServiceMock = {
@@ -191,7 +195,9 @@ describe('TaskController', () => {
 
       expect(resMock.status).toHaveBeenCalledWith(200)
       expect(resMock.json).toHaveBeenCalledWith(taskCriada)
-      expect(resMock.json).toHaveBeenCalledWith(expect.objectContaining({'taskStatus': 'Em Andamento'}))
+      expect(resMock.json).toHaveBeenCalledWith(
+        expect.objectContaining({ taskStatus: 'Em Andamento' })
+      )
     })
 
     it('Deve retornar erro ao tentar iniciar task inexistente', async () => {
@@ -241,7 +247,9 @@ describe('TaskController', () => {
 
       expect(resMock.status).toHaveBeenCalledWith(200)
       expect(resMock.json).toHaveBeenCalledWith(taskCriada)
-      expect(resMock.json).toHaveBeenCalledWith(expect.objectContaining({taskStatus: TaskStatus.Concluida}))
+      expect(resMock.json).toHaveBeenCalledWith(
+        expect.objectContaining({ taskStatus: TaskStatus.Concluida })
+      )
     })
 
     it('Deve retornar erro ao tentar concluir task inexistente', async () => {
@@ -275,6 +283,55 @@ describe('TaskController', () => {
       reqMock.params = { id: '1' }
 
       await taskController.concluirTask(reqMock as Request, resMock as Response)
+
+      expect(resMock.status).toHaveBeenCalledWith(500)
+      expect(resMock.json).toHaveBeenCalledWith({ erro: 'Erro interno do servidor' })
+    })
+  })
+
+  describe('alteraTituloTask', () => {
+    it('Deve alterar o titulo coretamente', async () => {
+      const taskCriada = criaTask(1, TaskStatus.Pendente, 'novoTitulo')
+      taskServiceMock.alterarTituloTask.mockResolvedValue(taskCriada)
+
+      reqMock.params = { id: '1', titulo: 'novoTitulo' }
+
+      await taskController.alterarTituloTask(reqMock as Request, resMock as Response)
+
+      expect(resMock.status).toHaveBeenCalledWith(200)
+      expect(resMock.json).toHaveBeenCalledWith(taskCriada)
+      expect(resMock.json).toHaveBeenCalledWith(expect.objectContaining({ titulo: 'novoTitulo' }))
+    })
+
+    it('Deve retornar erro ao tentar alterar o titulo de uma task inexistente', async () => {
+      taskServiceMock.alterarTituloTask.mockRejectedValue(new Error('Task com ID 1 não encontrada'))
+      reqMock.params = { id: '1' }
+
+      await taskController.alterarTituloTask(reqMock as Request, resMock as Response)
+
+      expect(resMock.status).toHaveBeenCalledWith(404)
+      expect(resMock.json).toHaveBeenCalledWith({ erro: 'Task com ID 1 não encontrada' })
+    })
+
+    it('Deve retornar erro ao tentar alterar para um titulo vazio', async () => {
+      taskServiceMock.alterarTituloTask.mockRejectedValue(new Error('Titulo é obrigatório'))
+      reqMock.params = { id: '1', titulo: '' }
+
+      await taskController.alterarTituloTask(reqMock as Request, resMock as Response)
+
+      expect(resMock.status).toHaveBeenCalledWith(422)
+      expect(resMock.json).toHaveBeenCalledWith({
+        erro: 'Titulo é obrigatório',
+      })
+    })
+
+    it('Deve ocorrer um erro inesperado ao alterar o titulo', async () => {
+      taskServiceMock.alterarTituloTask.mockRejectedValue(
+        new Error('Falha na conexão com o Banco de dados')
+      )
+      reqMock.params = { id: '1' }
+
+      await taskController.alterarTituloTask(reqMock as Request, resMock as Response)
 
       expect(resMock.status).toHaveBeenCalledWith(500)
       expect(resMock.json).toHaveBeenCalledWith({ erro: 'Erro interno do servidor' })
