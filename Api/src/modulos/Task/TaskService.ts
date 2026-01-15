@@ -71,13 +71,15 @@ export class TaskService {
     return await this.taskRepository.atualizar(task)
   }
 
-  async alterarDescricaoTask(id: number, novaDescricao: string): Promise<void> {
+  async alterarDescricaoTask(id: number, novaDescricao: string): Promise<Task> {
     const task = await this.obterTaskPorId(id)
     task.alteraDescricaoTask(novaDescricao)
-    await this.taskRepository.atualizar(task)
+    return await this.taskRepository.atualizar(task)
   }
 
   async deletarTask(id: number): Promise<void> {
+    const task = await this.obterTaskPorId(id)
+    if (!task) throw new Error(`Task com ID ${id} não encontrada`)
     await this.taskRepository.deletar(id)
   }
 }
