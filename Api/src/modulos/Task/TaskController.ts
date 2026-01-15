@@ -49,7 +49,7 @@ export class TaskController {
     try {
       const tasks = await this.taskService.listarTasks()
       res.status(200).json(tasks)
-    } catch (error) {
+    } catch {
       res.status(500).json({ erro: 'Erro interno do servidor' })
     }
   }
@@ -60,7 +60,7 @@ export class TaskController {
       const listaDeTasks = await this.taskService.listarTasksPorStatus(statusDaTask)
       res.status(200).json(listaDeTasks)
       return
-    } catch (erro) {
+    } catch {
       res.status(500).json({ erro: 'Erro interno do servidor' })
     }
   }
@@ -127,6 +127,41 @@ export class TaskController {
         return
       }
 
+      res.status(500).json({ erro: 'Erro interno do servidor' })
+    }
+  }
+
+  async alterarDescricaoTask(req: Request, res: Response): Promise<void> {
+    try {
+      const id = parseInt(req.params.id)
+      const descricao = req.params.descricao
+      const task = await this.taskService.alterarDescricaoTask(id, descricao)
+      res.status(200).json(task)
+      return
+    } catch (error) {
+      const mensagem = (error as Error).message
+
+      if (mensagem.includes('não encontrada')) {
+        res.status(404).json({ erro: mensagem })
+        return
+      }
+
+      res.status(500).json({ erro: 'Erro interno do servidor' })
+    }
+  }
+
+  async deletarTask(req: Request, res: Response): Promise<void> {
+    try {
+      const id = parseInt(req.params.id)
+      await this.taskService.deletarTask(id)
+      res.status(200).json('Task deletada com sucesso')
+      return
+    } catch (error) {
+      const mensagem = (error as Error).message
+      if (mensagem.includes('não encontrada')) {
+        res.status(404).json({ erro: mensagem })
+        return
+      }
       res.status(500).json({ erro: 'Erro interno do servidor' })
     }
   }
