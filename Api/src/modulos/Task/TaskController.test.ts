@@ -337,4 +337,80 @@ describe('TaskController', () => {
       expect(resMock.json).toHaveBeenCalledWith({ erro: 'Erro interno do servidor' })
     })
   })
+
+  describe('alteraDescricaoTask', () => {
+    it('Deve alterar a descricao coretamente', async () => {
+      const taskCriada = criaTask(1, TaskStatus.Pendente, 'titulo', 'novaDescricao')
+      taskServiceMock.alterarDescricaoTask.mockResolvedValue(taskCriada)
+
+      reqMock.params = { id: '1', descricao: 'novaDescricao' }
+
+      await taskController.alterarDescricaoTask(reqMock as Request, resMock as Response)
+
+      expect(resMock.status).toHaveBeenCalledWith(200)
+      expect(resMock.json).toHaveBeenCalledWith(taskCriada)
+      expect(resMock.json).toHaveBeenCalledWith(
+        expect.objectContaining({ descricao: 'novaDescricao' })
+      )
+    })
+
+    it('Deve retornar erro ao tentar alterar o titulo de uma task inexistente', async () => {
+      taskServiceMock.alterarDescricaoTask.mockRejectedValue(
+        new Error('Task com ID 1 não encontrada')
+      )
+      reqMock.params = { id: '1', descricao: 'novaDescricao' }
+
+      await taskController.alterarDescricaoTask(reqMock as Request, resMock as Response)
+
+      expect(resMock.status).toHaveBeenCalledWith(404)
+      expect(resMock.json).toHaveBeenCalledWith({ erro: 'Task com ID 1 não encontrada' })
+    })
+
+    it('Deve ocorrer um erro inesperado ao alterar o titulo', async () => {
+      taskServiceMock.alterarDescricaoTask.mockRejectedValue(
+        new Error('Falha na conexão com o Banco de dados')
+      )
+      reqMock.params = { id: '1', descricao: 'Desc ' }
+
+      await taskController.alterarDescricaoTask(reqMock as Request, resMock as Response)
+
+      expect(resMock.status).toHaveBeenCalledWith(500)
+      expect(resMock.json).toHaveBeenCalledWith({ erro: 'Erro interno do servidor' })
+    })
+  })
+
+  describe('deletaTask', () => {
+    it('Deve deletar uma task coretamente', async () => {
+      taskServiceMock.deletarTask.mockResolvedValue(undefined)
+
+      reqMock.params = { id: '1' }
+
+      await taskController.deletarTask(reqMock as Request, resMock as Response)
+
+      expect(resMock.status).toHaveBeenCalledWith(200)
+      expect(resMock.json).toHaveBeenCalledWith('Task deletada com sucesso')
+    })
+
+    it('Deve retornar erro ao tentar alterar o titulo de uma task inexistente', async () => {
+      taskServiceMock.deletarTask.mockRejectedValue(new Error('Task com ID 1 não encontrada'))
+      reqMock.params = { id: '1' }
+
+      await taskController.deletarTask(reqMock as Request, resMock as Response)
+
+      expect(resMock.status).toHaveBeenCalledWith(404)
+      expect(resMock.json).toHaveBeenCalledWith({ erro: 'Task com ID 1 não encontrada' })
+    })
+
+    it('Deve ocorrer um erro inesperado ao alterar o titulo', async () => {
+      taskServiceMock.deletarTask.mockRejectedValue(
+        new Error('Falha na conexão com o Banco de dados')
+      )
+      reqMock.params = { id: '1' }
+
+      await taskController.deletarTask(reqMock as Request, resMock as Response)
+
+      expect(resMock.status).toHaveBeenCalledWith(500)
+      expect(resMock.json).toHaveBeenCalledWith({ erro: 'Erro interno do servidor' })
+    })
+  })
 })
