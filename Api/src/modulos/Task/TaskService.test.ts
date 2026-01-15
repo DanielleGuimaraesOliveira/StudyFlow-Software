@@ -212,15 +212,17 @@ describe('TaskService', () => {
 
   it('Deve deletar uma task corretamente', async () => {
     taskRepositoryMock.deletar.mockResolvedValue()
+    const taskCriada = criaTask(1)
+    taskRepositoryMock.buscarPorId.mockResolvedValue(taskCriada)
     await taskService.deletarTask(1)
 
     expect(taskRepositoryMock.deletar).toHaveBeenCalledWith(1)
   })
 
-  it('Deve dar erro ao uma task', async () => {
-    taskRepositoryMock.deletar.mockRejectedValue(new Error('Falha ao deletar Task'))
-    await expect(taskService.deletarTask(1)).rejects.toThrow('Falha ao deletar Task')
+  it('Deve dar erro ao deletar uma task', async () => {
+    taskRepositoryMock.buscarPorId.mockResolvedValue(null)
+    await expect(taskService.deletarTask(1)).rejects.toThrow('Task com ID 1 não encontrada')
 
-    expect(taskRepositoryMock.deletar).toHaveBeenCalledWith(1)
+    expect(taskRepositoryMock.deletar).not.toHaveBeenCalled()
   })
 })
