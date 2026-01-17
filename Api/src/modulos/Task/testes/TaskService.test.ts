@@ -1,6 +1,6 @@
-import { TaskRepository, TaskService } from './TaskService'
-import { Task } from '../../../../Shared/Dominio/Task/taskEntity'
-import { TaskStatus } from '../../../../Shared/Dominio/Task/taskEnums'
+import { TaskRepository, TaskService } from '../aplicacao/TaskService'
+import { Task } from '../dominio/taskEntity'
+import { TaskStatus } from '../dominio/taskEnums'
 
 describe('TaskService', () => {
   const criaTask = (

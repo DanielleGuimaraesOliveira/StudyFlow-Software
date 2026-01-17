@@ -1,6 +1,6 @@
 import { Request, Response } from 'express'
-import { CriarTaskDTO, TaskService } from './TaskService'
-import { TaskStatus } from '../../../../Shared/Dominio/Task/taskEnums'
+import { CriarTaskDTO, TaskService } from '../aplicacao/TaskService'
+import { TaskStatus } from '../dominio/taskEnums'
 export class TaskController {
   constructor(private readonly taskService: TaskService) {}
 
@@ -22,8 +22,6 @@ export class TaskController {
         return
       }
 
-      // eslint-disable-next-line no-console
-      console.error('Erro inesperado:', error)
       res.status(500).json({ erro: 'Erro interno do servidor' })
     }
   }
@@ -49,8 +47,12 @@ export class TaskController {
     try {
       const tasks = await this.taskService.listarTasks()
       res.status(200).json(tasks)
-    } catch {
+      return
+    } catch (error) {
+      // eslint-disable-next-line no-console
+      console.error('Erro ao listar tasks:', error)
       res.status(500).json({ erro: 'Erro interno do servidor' })
+      return
     }
   }
 
@@ -72,6 +74,8 @@ export class TaskController {
       res.status(200).json(task)
       return
     } catch (error) {
+      // eslint-disable-next-line no-console
+      console.error('Erro ao iniciar task:', error)
       const mensagem = (error as Error).message
 
       if (mensagem.includes('não encontrada')) {
@@ -93,6 +97,8 @@ export class TaskController {
       res.status(200).json(task)
       return
     } catch (error) {
+      // eslint-disable-next-line no-console
+      console.error('Erro ao concluir task:', error)
       const mensagem = (error as Error).message
 
       if (mensagem.includes('não encontrada')) {
@@ -115,6 +121,8 @@ export class TaskController {
       res.status(200).json(task)
       return
     } catch (error) {
+      // eslint-disable-next-line no-console
+      console.error('Erro ao alterar título:', error)
       const mensagem = (error as Error).message
 
       if (mensagem.includes('não encontrada')) {
@@ -128,6 +136,7 @@ export class TaskController {
       }
 
       res.status(500).json({ erro: 'Erro interno do servidor' })
+      return
     }
   }
 
@@ -139,6 +148,8 @@ export class TaskController {
       res.status(200).json(task)
       return
     } catch (error) {
+      // eslint-disable-next-line no-console
+      console.error('Erro ao alterar descrição:', error)
       const mensagem = (error as Error).message
 
       if (mensagem.includes('não encontrada')) {

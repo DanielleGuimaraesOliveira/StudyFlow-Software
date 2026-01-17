@@ -1,5 +1,5 @@
-import { Task } from '../../../../Shared/Dominio/Task/taskEntity'
-import { TaskPrioridade, TaskStatus } from '../../../../Shared/Dominio/Task/taskEnums'
+import { Task } from '../dominio/taskEntity'
+import { TaskPrioridade, TaskStatus } from '../dominio/taskEnums'
 
 export interface CriarTaskDTO {
   titulo: string

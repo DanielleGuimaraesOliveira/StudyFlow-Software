@@ -1,8 +1,8 @@
-import { TaskService } from './TaskService'
+import { TaskService } from '../aplicacao/TaskService'
 import { Request, Response } from 'express'
-import { TaskController } from './TaskController'
-import { Task } from '../../../../Shared/Dominio/Task/taskEntity'
-import { TaskStatus } from '../../../../Shared/Dominio/Task/taskEnums'
+import { TaskController } from '../http/TaskController'
+import { Task } from '../dominio/taskEntity'
+import { TaskStatus } from '../dominio/taskEnums'
 
 describe('TaskController', () => {
   const criaTask = (

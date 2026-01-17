@@ -1,8 +1,8 @@
 import 'dotenv/config'
 import { Pool } from 'pg'
-import { Task } from '../../../../Shared/Dominio/Task/taskEntity'
-import { TaskPrioridade, TaskStatus } from '../../../../Shared/Dominio/Task/taskEnums'
-import { TaskRepository } from './TaskService'
+import { Task } from '../../dominio/taskEntity'
+import { TaskPrioridade, TaskStatus } from '../../dominio/taskEnums'
+import { TaskRepository } from '../../aplicacao/TaskService'
 
 interface TaskRow {
   id: number
@@ -14,7 +14,7 @@ interface TaskRow {
   data_final: Date
 }
 
-export class TaskRepositoryPrisma implements TaskRepository {
+export class TaskRepositoryPg implements TaskRepository {
   private pool: Pool
 
   constructor() {
@@ -66,6 +66,7 @@ export class TaskRepositoryPrisma implements TaskRepository {
       SET titulo = $1, descricao = $2, status = $3, prioridade = $4, 
           data_criacao = $5, data_final = $6
       WHERE id = $7
+      RETURNING *
     `
     const values = [
       task.getTitulo(),
@@ -77,6 +78,11 @@ export class TaskRepositoryPrisma implements TaskRepository {
       task.getId(),
     ]
     const resultado = await this.pool.query(query, values)
+    // eslint-disable-next-line no-console
+    console.log('UPDATE resultado:', resultado.rows)
+    if (!resultado.rows || resultado.rows.length === 0) {
+      throw new Error(`Task com ID ${task.getId()} não encontrada para atualização`)
+    }
     return this.toDomain(resultado.rows[0])
   }
 
