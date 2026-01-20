@@ -1,4 +1,5 @@
 import { TaskStatus, TaskPrioridade } from './taskEnums'
+import { ErroDominio, ErroValidacao } from '../../../Shared/erros/erros'
 export interface TaskPropriedades {
   id: number
   titulo: string
@@ -27,19 +28,19 @@ export class Task {
     this.dataCriacao = props.dataCriacao ?? new Date()
     this.dataFinal = props.dataFinal ?? new Date()
     if (!props.titulo || props.titulo.trim() == '') {
-      throw new Error('Titulo é obrigatório')
+      throw new ErroValidacao('Titulo é obrigatório')
     }
 
     if (props.titulo.length < 3) {
-      throw new Error('Titulo tem que ter no minimo 3 caracteres')
+      throw new ErroDominio('Titulo tem que ter no minimo 3 caracteres')
     }
 
     if (props.titulo.length > 100) {
-      throw new Error('Titulo tem que ter no máximo 100 caracteres')
+      throw new ErroDominio('Titulo tem que ter no máximo 100 caracteres')
     }
 
     if (this.dataFinal < this.dataCriacao) {
-      throw new Error('Data final não pode ser anterior à data de criação')
+      throw new ErroDominio('Data final não pode ser anterior à data de criação')
     }
   }
 
@@ -73,7 +74,7 @@ export class Task {
 
   public setStatusEmAndamento(): void {
     if (this.taskStatus != TaskStatus.Pendente) {
-      throw new Error('Apenas tarefas pendentes podem ser iniciadas')
+      throw new ErroDominio('Apenas tarefas pendentes podem ser iniciadas')
     }
 
     this.taskStatus = TaskStatus.EmAndamento
@@ -81,7 +82,7 @@ export class Task {
 
   public setStatusConcluido(): void {
     if (this.taskStatus != TaskStatus.EmAndamento) {
-      throw new Error('Apenas tarefas em andamento podem ser concluidas')
+      throw new ErroDominio('Apenas tarefas em andamento podem ser concluidas')
     }
 
     this.taskStatus = TaskStatus.Concluida
@@ -89,14 +90,14 @@ export class Task {
 
   public alteraTituloTask(novoTitulo: string): void {
     if (!novoTitulo.trim()) {
-      throw new Error('Titulo é obrigatório')
+      throw new ErroValidacao('Titulo é obrigatório')
     }
     if (novoTitulo.trim().length < 3) {
-      throw new Error('Titulo tem que ter pelo menos 3 caracteres')
+      throw new ErroDominio('Titulo tem que ter pelo menos 3 caracteres')
     }
 
     if (novoTitulo.trim().length > 100) {
-      throw new Error('Titulo tem que ter no máximo 100 caracteres')
+      throw new ErroDominio('Titulo tem que ter no máximo 100 caracteres')
     }
 
     this.titulo = novoTitulo.trim()
