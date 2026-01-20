@@ -1,6 +1,7 @@
 import { Request, Response } from 'express'
 import { CriarTaskDTO, TaskService } from '../aplicacao/TaskService'
 import { TaskStatus } from '../dominio/taskEnums'
+import { ErroDominio, ErroNaoEncontrado, ErroValidacao } from '../../../Shared/erros/erros'
 export class TaskController {
   constructor(private readonly taskService: TaskService) {}
 
@@ -12,12 +13,7 @@ export class TaskController {
     } catch (error) {
       const mensagem = (error as Error).message
 
-      if (mensagem.includes('Data final') || mensagem.includes('anterior')) {
-        res.status(400).json({ erro: mensagem })
-        return
-      }
-
-      if (mensagem.includes('Titulo') || mensagem.includes('caracteres')) {
+      if (error instanceof ErroValidacao || error instanceof ErroDominio) {
         res.status(400).json({ erro: mensagem })
         return
       }
@@ -34,7 +30,7 @@ export class TaskController {
     } catch (error) {
       const mensagem = (error as Error).message
 
-      if (mensagem.includes('não encontrada')) {
+      if (error instanceof ErroNaoEncontrado) {
         res.status(404).json({ erro: mensagem })
         return
       }
@@ -49,8 +45,6 @@ export class TaskController {
       res.status(200).json(tasks)
       return
     } catch (error) {
-      // eslint-disable-next-line no-console
-      console.error('Erro ao listar tasks:', error)
       res.status(500).json({ erro: 'Erro interno do servidor' })
       return
     }
@@ -74,15 +68,13 @@ export class TaskController {
       res.status(200).json(task)
       return
     } catch (error) {
-      // eslint-disable-next-line no-console
-      console.error('Erro ao iniciar task:', error)
       const mensagem = (error as Error).message
 
-      if (mensagem.includes('não encontrada')) {
+      if (error instanceof ErroNaoEncontrado) {
         res.status(404).json({ erro: mensagem })
         return
       }
-      if (mensagem.includes('tarefas pendentes')) {
+      if (error instanceof ErroDominio) {
         res.status(422).json({ erro: mensagem })
         return
       }
@@ -97,15 +89,13 @@ export class TaskController {
       res.status(200).json(task)
       return
     } catch (error) {
-      // eslint-disable-next-line no-console
-      console.error('Erro ao concluir task:', error)
       const mensagem = (error as Error).message
 
-      if (mensagem.includes('não encontrada')) {
+      if (error instanceof ErroNaoEncontrado) {
         res.status(404).json({ erro: mensagem })
         return
       }
-      if (mensagem.includes('tarefas em andamento')) {
+      if (error instanceof ErroDominio) {
         res.status(422).json({ erro: mensagem })
         return
       }
@@ -121,22 +111,19 @@ export class TaskController {
       res.status(200).json(task)
       return
     } catch (error) {
-      // eslint-disable-next-line no-console
-      console.error('Erro ao alterar título:', error)
       const mensagem = (error as Error).message
 
-      if (mensagem.includes('não encontrada')) {
+      if (error instanceof ErroNaoEncontrado) {
         res.status(404).json({ erro: mensagem })
         return
       }
 
-      if (mensagem.includes('obrigatório') || mensagem.includes('tem que ter')) {
+      if (error instanceof ErroDominio) {
         res.status(422).json({ erro: mensagem })
         return
       }
 
       res.status(500).json({ erro: 'Erro interno do servidor' })
-      return
     }
   }
 
@@ -148,11 +135,9 @@ export class TaskController {
       res.status(200).json(task)
       return
     } catch (error) {
-      // eslint-disable-next-line no-console
-      console.error('Erro ao alterar descrição:', error)
       const mensagem = (error as Error).message
 
-      if (mensagem.includes('não encontrada')) {
+      if (error instanceof ErroNaoEncontrado) {
         res.status(404).json({ erro: mensagem })
         return
       }
@@ -169,7 +154,7 @@ export class TaskController {
       return
     } catch (error) {
       const mensagem = (error as Error).message
-      if (mensagem.includes('não encontrada')) {
+      if (error instanceof ErroNaoEncontrado) {
         res.status(404).json({ erro: mensagem })
         return
       }
