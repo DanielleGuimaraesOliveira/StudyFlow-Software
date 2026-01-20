@@ -182,7 +182,7 @@ describe('Task', () => {
 
     expect(task.getId()).toBe(11)
     expect(task.getTitulo()).toBe('Estudar Go')
-    expect(() => task.alteraTituloTask('ab')).toThrow('Titulo tem que ter pelo menos 3 caracteres')
+    expect(() => task.alteraTituloTask('ab')).toThrow('Titulo tem que ter no minimo 3 caracteres')
     expect(task.getTitulo()).toBe('Estudar Go')
     expect(task.getTaskStatus()).toBe(TaskStatus.EmAndamento)
     expect(task.getDataCriacao()).toBe(dataCriacao)
