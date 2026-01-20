@@ -39,7 +39,7 @@ export class Task {
     }
 
     if (titulo.length < 3) {
-      throw new ErroDominio('Titulo tem que ter pelo menos 3 caracteres')
+      throw new ErroDominio('Titulo tem que ter no minimo 3 caracteres')
     }
 
     if (titulo.length > 100) {
