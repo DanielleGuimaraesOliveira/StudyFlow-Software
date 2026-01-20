@@ -3,6 +3,7 @@ import { Request, Response } from 'express'
 import { TaskController } from '../http/TaskController'
 import { Task } from '../dominio/taskEntity'
 import { TaskStatus } from '../dominio/taskEnums'
+import { ErroDominio, ErroNaoEncontrado, ErroValidacao } from '../../../Shared/erros/erros'
 
 describe('TaskController', () => {
   const criaTask = (
@@ -64,7 +65,7 @@ describe('TaskController', () => {
     })
 
     it('Deve lançar um erro ao criar uma task sem titulo', async () => {
-      taskServiceMock.criarTask.mockRejectedValue(new Error('Titulo da Task é obrigatório'))
+      taskServiceMock.criarTask.mockRejectedValue(new ErroValidacao('Titulo da Task é obrigatório'))
 
       reqMock.body = { descricao: 'Descricao' }
 
@@ -78,7 +79,7 @@ describe('TaskController', () => {
 
     it('Deve lançar um erro ao criar uma task com menos de 3 caracteres', async () => {
       taskServiceMock.criarTask.mockRejectedValue(
-        new Error('Titulo tem que ter no minimo 3 caracteres')
+        new ErroDominio('Titulo tem que ter no minimo 3 caracteres')
       )
 
       reqMock.body = { titulo: '1a', descricao: 'descricao' }
@@ -106,7 +107,9 @@ describe('TaskController', () => {
     })
 
     it('Deve retornar um erro ao não encontrar uma task por id', async () => {
-      taskServiceMock.obterTaskPorId.mockRejectedValue(new Error('Task com ID 1 não encontrada'))
+      taskServiceMock.obterTaskPorId.mockRejectedValue(
+        new ErroNaoEncontrado('Task com ID 1 não encontrada')
+      )
       reqMock.params = { id: '1' }
 
       await taskController.obterTaskPorId(reqMock as Request, resMock as Response)
@@ -201,7 +204,9 @@ describe('TaskController', () => {
     })
 
     it('Deve retornar erro ao tentar iniciar task inexistente', async () => {
-      taskServiceMock.iniciarTask.mockRejectedValue(new Error('Task com ID 1 não encontrada'))
+      taskServiceMock.iniciarTask.mockRejectedValue(
+        new ErroNaoEncontrado('Task com ID 1 não encontrada')
+      )
       reqMock.params = { id: '1' }
 
       await taskController.iniciarTask(reqMock as Request, resMock as Response)
@@ -212,7 +217,7 @@ describe('TaskController', () => {
 
     it('Deve retornar erro ao tentar iniciar task com status incorreto', async () => {
       taskServiceMock.iniciarTask.mockRejectedValue(
-        new Error('Apenas tarefas pendentes podem ser iniciadas')
+        new ErroDominio('Apenas tarefas pendentes podem ser iniciadas')
       )
       reqMock.params = { id: '1' }
 
@@ -253,7 +258,9 @@ describe('TaskController', () => {
     })
 
     it('Deve retornar erro ao tentar concluir task inexistente', async () => {
-      taskServiceMock.concluirTask.mockRejectedValue(new Error('Task com ID 1 não encontrada'))
+      taskServiceMock.concluirTask.mockRejectedValue(
+        new ErroNaoEncontrado('Task com ID 1 não encontrada')
+      )
       reqMock.params = { id: '1' }
 
       await taskController.concluirTask(reqMock as Request, resMock as Response)
@@ -264,7 +271,7 @@ describe('TaskController', () => {
 
     it('Deve retornar erro ao tentar concluir task com status incorreto', async () => {
       taskServiceMock.concluirTask.mockRejectedValue(
-        new Error('Apenas tarefas em andamento podem ser concluidas')
+        new ErroDominio('Apenas tarefas em andamento podem ser concluidas')
       )
       reqMock.params = { id: '1' }
 
@@ -304,7 +311,9 @@ describe('TaskController', () => {
     })
 
     it('Deve retornar erro ao tentar alterar o titulo de uma task inexistente', async () => {
-      taskServiceMock.alterarTituloTask.mockRejectedValue(new Error('Task com ID 1 não encontrada'))
+      taskServiceMock.alterarTituloTask.mockRejectedValue(
+        new ErroNaoEncontrado('Task com ID 1 não encontrada')
+      )
       reqMock.params = { id: '1' }
 
       await taskController.alterarTituloTask(reqMock as Request, resMock as Response)
@@ -314,7 +323,7 @@ describe('TaskController', () => {
     })
 
     it('Deve retornar erro ao tentar alterar para um titulo vazio', async () => {
-      taskServiceMock.alterarTituloTask.mockRejectedValue(new Error('Titulo é obrigatório'))
+      taskServiceMock.alterarTituloTask.mockRejectedValue(new ErroDominio('Titulo é obrigatório'))
       reqMock.params = { id: '1', titulo: '' }
 
       await taskController.alterarTituloTask(reqMock as Request, resMock as Response)
@@ -356,7 +365,7 @@ describe('TaskController', () => {
 
     it('Deve retornar erro ao tentar alterar o titulo de uma task inexistente', async () => {
       taskServiceMock.alterarDescricaoTask.mockRejectedValue(
-        new Error('Task com ID 1 não encontrada')
+        new ErroNaoEncontrado('Task com ID 1 não encontrada')
       )
       reqMock.params = { id: '1', descricao: 'novaDescricao' }
 
@@ -392,7 +401,9 @@ describe('TaskController', () => {
     })
 
     it('Deve retornar erro ao tentar alterar o titulo de uma task inexistente', async () => {
-      taskServiceMock.deletarTask.mockRejectedValue(new Error('Task com ID 1 não encontrada'))
+      taskServiceMock.deletarTask.mockRejectedValue(
+        new ErroNaoEncontrado('Task com ID 1 não encontrada')
+      )
       reqMock.params = { id: '1' }
 
       await taskController.deletarTask(reqMock as Request, resMock as Response)
