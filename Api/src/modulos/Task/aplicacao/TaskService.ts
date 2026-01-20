@@ -1,3 +1,4 @@
+import { ErroNaoEncontrado } from '../../../Shared/erros/erros'
 import { Task } from '../dominio/taskEntity'
 import { TaskPrioridade, TaskStatus } from '../dominio/taskEnums'
 
@@ -37,7 +38,7 @@ export class TaskService {
 
   async obterTaskPorId(id: number): Promise<Task> {
     const task = await this.taskRepository.buscarPorId(id)
-    if (!task) throw new Error(`Task com ID ${id} não encontrada`)
+    if (!task) throw new ErroNaoEncontrado(`Task com ID ${id} não encontrada`)
     return task
   }
 
@@ -51,7 +52,7 @@ export class TaskService {
 
   async iniciarTask(id: number): Promise<Task> {
     const task = await this.obterTaskPorId(id)
-    if (!task) throw new Error(`Task com ID ${id} não encontrada`)
+    if (!task) throw new ErroNaoEncontrado(`Task com ID ${id} não encontrada`)
 
     task.setStatusEmAndamento()
     return await this.taskRepository.atualizar(task)
@@ -59,14 +60,14 @@ export class TaskService {
 
   async concluirTask(id: number): Promise<Task> {
     const task = await this.obterTaskPorId(id)
-    if (!task) throw new Error(`Task com ID ${id} não encontrada`)
+    if (!task) throw new ErroNaoEncontrado(`Task com ID ${id} não encontrada`)
     task.setStatusConcluido()
     return await this.taskRepository.atualizar(task)
   }
 
   async alterarTituloTask(id: number, novoTitulo: string): Promise<Task> {
     const task = await this.obterTaskPorId(id)
-    if (!task) throw new Error(`Task com ID ${id} não encontrada`)
+    if (!task) throw new ErroNaoEncontrado(`Task com ID ${id} não encontrada`)
     task.alteraTituloTask(novoTitulo)
     return await this.taskRepository.atualizar(task)
   }
@@ -79,7 +80,7 @@ export class TaskService {
 
   async deletarTask(id: number): Promise<void> {
     const task = await this.obterTaskPorId(id)
-    if (!task) throw new Error(`Task com ID ${id} não encontrada`)
+    if (!task) throw new ErroNaoEncontrado(`Task com ID ${id} não encontrada`)
     await this.taskRepository.deletar(id)
   }
 }
