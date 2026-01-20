@@ -20,28 +20,45 @@ export class Task {
   private dataFinal: Date
 
   constructor(props: TaskPropriedades) {
+    this.validaTitulo(props.titulo)
+    //Todo adicionar validações para descrição - max: 500 caracters
+    const { dataCriacao, dataFinal } = this.validaData(props.dataCriacao, props.dataFinal)
+
     this.id = props.id
     this.titulo = props.titulo.trim()
     this.descricao = props.descricao?.trim() ?? ''
     this.taskStatus = props.taskStatus ?? TaskStatus.Pendente
     this.taskPrioridade = props.taskPrioridade ?? TaskPrioridade.SemPrioridade
-    this.dataCriacao = props.dataCriacao ?? new Date()
-    this.dataFinal = props.dataFinal ?? new Date()
-    if (!props.titulo || props.titulo.trim() == '') {
+    this.dataCriacao = dataCriacao
+    this.dataFinal = dataFinal
+  }
+
+  private validaTitulo(titulo: string): void {
+    if (!titulo || titulo.trim() == '') {
       throw new ErroValidacao('Titulo é obrigatório')
     }
 
-    if (props.titulo.length < 3) {
-      throw new ErroDominio('Titulo tem que ter no minimo 3 caracteres')
+    if (titulo.length < 3) {
+      throw new ErroDominio('Titulo tem que ter pelo menos 3 caracteres')
     }
 
-    if (props.titulo.length > 100) {
+    if (titulo.length > 100) {
       throw new ErroDominio('Titulo tem que ter no máximo 100 caracteres')
     }
+  }
 
-    if (this.dataFinal < this.dataCriacao) {
+  private validaData(
+    dataCriacao: Date | undefined,
+    dataFinal: Date | undefined
+  ): { dataCriacao: Date; dataFinal: Date } {
+    const tempDataCriacao = dataCriacao ?? new Date()
+    const tempDataFinal = dataFinal ?? new Date()
+
+    if (tempDataFinal < tempDataCriacao) {
       throw new ErroDominio('Data final não pode ser anterior à data de criação')
     }
+
+    return { dataCriacao: tempDataCriacao, dataFinal: tempDataFinal }
   }
 
   public getId(): number {
@@ -89,16 +106,7 @@ export class Task {
   }
 
   public alteraTituloTask(novoTitulo: string): void {
-    if (!novoTitulo.trim()) {
-      throw new ErroValidacao('Titulo é obrigatório')
-    }
-    if (novoTitulo.trim().length < 3) {
-      throw new ErroDominio('Titulo tem que ter pelo menos 3 caracteres')
-    }
-
-    if (novoTitulo.trim().length > 100) {
-      throw new ErroDominio('Titulo tem que ter no máximo 100 caracteres')
-    }
+    this.validaTitulo(novoTitulo)
 
     this.titulo = novoTitulo.trim()
   }
