@@ -1,10 +1,15 @@
+import { hash } from 'bcrypt'
 import { ErroDominio, ErroValidacao } from '../../../Shared/erros/erros'
 
-export interface UserPropriedades {
+export interface CriarUserPropriedades {
   id: number
   nome: string
   email: string
   senha: string
+}
+
+export interface UserPropriedades extends CriarUserPropriedades {
+  dataCriacao: Date
 }
 
 export class User {
@@ -14,16 +19,24 @@ export class User {
   private senha: string
   private dataCriacao: Date
 
-  constructor(props: UserPropriedades) {
+  constructor(props: CriarUserPropriedades) {
     this.validaNome(props.nome.trim())
     this.validaEmail(props.email)
-    this.validaSenha(props.senha)
 
     this.id = props.id
     this.nome = props.nome.trim()
     this.email = props.email.toLowerCase()
     this.senha = props.senha
     this.dataCriacao = new Date()
+  }
+
+  public defineSenhaTexto(senhaTexto: string): void {
+    this.validaSenha(senhaTexto)
+    this.senha = senhaTexto
+  }
+
+  public defineSenhaHash(senhaHash: string): void {
+    this.senha = senhaHash
   }
 
   private validaEmail(email: string): void {
@@ -63,21 +76,31 @@ export class User {
     return this.nome
   }
 
+  public getEmail(): string {
+    return this.email
+  }
+
   public getDataCriacao(): Date {
     return this.dataCriacao
   }
+
   public alteraNome(novoNome: string): void {
     this.validaNome(novoNome)
     this.nome = novoNome.trim()
   }
 
-  public alteraSenha(novaSenha: string): void {
-    this.validaSenha(novaSenha)
-    this.senha = novaSenha
-  }
-
   public alteraEmail(novoEmail: string): void {
     this.validaEmail(novoEmail)
     this.email = novoEmail.toLowerCase()
+  }
+
+  static fromDatabase(props: UserPropriedades): User {
+    const user = Object.create(User.prototype)
+    user.id = props.id
+    user.nome = props.nome
+    user.email = props.email
+    user.senha = props.senha
+    user.dataCriacao = props.dataCriacao
+    return user
   }
 }
