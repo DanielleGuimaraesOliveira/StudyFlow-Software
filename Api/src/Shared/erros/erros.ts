@@ -18,3 +18,10 @@ export class ErroNaoEncontrado extends Error {
     this.name = 'ErroNaoEncontrado'
   }
 }
+
+export class ErroInfra extends Error {
+  constructor(mensagem: string) {
+    super(mensagem)
+    this.name = 'ErroInfra'
+  }
+}
