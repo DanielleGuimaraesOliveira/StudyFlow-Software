@@ -78,8 +78,7 @@ export class TaskRepositoryPg implements TaskRepository {
       task.getId(),
     ]
     const resultado = await this.pool.query(query, values)
-    // eslint-disable-next-line no-console
-    console.log('UPDATE resultado:', resultado.rows)
+
     if (!resultado.rows || resultado.rows.length === 0) {
       throw new Error(`Task com ID ${task.getId()} não encontrada para atualização`)
     }
