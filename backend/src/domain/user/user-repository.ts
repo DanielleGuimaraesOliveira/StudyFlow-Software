@@ -26,11 +26,11 @@ export class UserRepositoryPg implements UserRepository {
       const result = await pool.query(query, values)
       return this.toDomain(result.rows[0])
     } catch {
-      throw new DataBaseError('Connection with database failed')
+      throw new DataBaseError('Failed to save user in database')
     }
   }
 
-  async update(user: User): Promise<User | null> {
+  async update(user: User): Promise<User> {
     try {
       const query = `UPDATE users 
             SET name = $1, email = $2, password = $3, 
@@ -45,12 +45,10 @@ export class UserRepositoryPg implements UserRepository {
         user.getId(),
       ]
       const result = await pool.query(query, values)
-      if (result.rows.length == 0) {
-        return null
-      }
+
       return this.toDomain(result.rows[0])
     } catch {
-      throw new DataBaseError('Connection with database failed')
+      throw new DataBaseError('Failed to update user in database')
     }
   }
 
@@ -60,24 +58,20 @@ export class UserRepositoryPg implements UserRepository {
       const result = await pool.query(query, [userId])
       return result.rows[0] ? this.toDomain(result.rows[0]) : null
     } catch {
-      throw new DataBaseError('Connection with database failed')
+      throw new DataBaseError('Failed to find user in database')
     }
   }
 
-  async remove(userId: number): Promise<void> {
+  async deleteById(userId: number): Promise<void> {
     try {
       const query = `DELETE FROM users WHERE id = $1`
       await pool.query(query, [userId])
     } catch {
-      throw new DataBaseError('Connection with database failed')
+      throw new DataBaseError('Failed to delete user')
     }
   }
 
   private toDomain(row: UserRows): User {
-    if (!row) {
-      throw new DataBaseError('O registro está em branco')
-    }
-
     return User.fromDatabase({
       id: row.id,
       name: row.name,
