@@ -19,7 +19,7 @@ export class TaskRepositoryPg implements TaskRepository {
   constructor() {}
 
   async save(task: Task): Promise<Task> {
-    try{
+    try {
       const query = `
         INSERT INTO tasks (title, description, status_task, priority_task, created_at, deadline)
         VALUES ($1, $2, $3, $4, $5, $6)
@@ -33,47 +33,47 @@ export class TaskRepositoryPg implements TaskRepository {
         task.getCreatedAt(),
         task.getDeadline(),
       ]
-  
+
       const result = await pool.query(query, values)
 
       return this.toDomain(result.rows[0])
-    } catch{
+    } catch {
       throw new DataBaseError('Failed to save task in database')
     }
   }
 
   async findById(id: number): Promise<Task | null> {
-    try{
+    try {
       const query = 'SELECT * FROM tasks WHERE id = $1'
       const result = await pool.query(query, [id])
       return result.rows[0] ? this.toDomain(result.rows[0]) : null
-    } catch{
+    } catch {
       throw new DataBaseError('Failed to find task by id')
     }
   }
 
   async findAll(): Promise<Task[]> {
-    try{
+    try {
       const query = 'SELECT * FROM tasks ORDER BY id'
       const result = await pool.query(query)
       return result.rows.map((row) => this.toDomain(row))
-    } catch{
+    } catch {
       throw new DataBaseError('Failed to find all tasks')
     }
   }
 
   async findByStatus(status: TaskStatus): Promise<Task[]> {
-    try{
+    try {
       const query = 'SELECT * FROM tasks WHERE status_task = $1 ORDER BY id'
       const result = await pool.query(query, [status])
       return result.rows.map((row) => this.toDomain(row))
-    } catch{
+    } catch {
       throw new DataBaseError('Failed to find task by status')
     }
   }
 
   async update(task: Task): Promise<Task> {
-    try{
+    try {
       const query = `
         UPDATE tasks 
         SET title = $1, description = $2, status_task = $3, priority_task = $4, 
@@ -91,18 +91,18 @@ export class TaskRepositoryPg implements TaskRepository {
         task.getId(),
       ]
       const result = await pool.query(query, values)
-  
+
       return this.toDomain(result.rows[0])
-    } catch{
+    } catch {
       throw new DataBaseError('Failed to update task in database')
     }
   }
 
   async deleteById(id: number): Promise<void> {
-    try{
+    try {
       const query = 'DELETE FROM tasks WHERE id = $1'
       await pool.query(query, [id])
-    } catch{
+    } catch {
       throw new DataBaseError('Failed to delete task by id')
     }
   }
