@@ -73,7 +73,7 @@ describe('TaskController', () => {
 
       expect(responseMock.status).toHaveBeenCalledWith(400)
       expect(responseMock.json).toHaveBeenCalledWith({
-        erro: 'Task title is required',
+        error: 'Task title is required',
       })
     })
 
@@ -88,7 +88,7 @@ describe('TaskController', () => {
 
       expect(responseMock.status).toHaveBeenCalledWith(400)
       expect(responseMock.json).toHaveBeenCalledWith({
-        erro: 'Title must be at least 3 characters long',
+        error: 'Title must be at least 3 characters long',
       })
     })
   })
@@ -114,7 +114,7 @@ describe('TaskController', () => {
 
       await taskController.findById(requestMock as Request, responseMock as Response)
       expect(responseMock.status).toHaveBeenCalledWith(404)
-      expect(responseMock.json).toHaveBeenCalledWith({ erro: 'Task with ID 1 was not found' })
+      expect(responseMock.json).toHaveBeenCalledWith({ error: 'Task with ID 1 was not found' })
     })
 
     it('Should return an unexpected error when getting a task by id', async () => {
@@ -124,7 +124,7 @@ describe('TaskController', () => {
       await taskController.findById(requestMock as Request, responseMock as Response)
 
       expect(responseMock.status).toHaveBeenCalledWith(500)
-      expect(responseMock.json).toHaveBeenCalledWith({ erro: 'Internal server error' })
+      expect(responseMock.json).toHaveBeenCalledWith({ error: 'Internal server error' })
     })
   })
 
@@ -151,7 +151,7 @@ describe('TaskController', () => {
       await taskController.showAllTasks(requestMock as Request, responseMock as Response)
 
       expect(responseMock.status).toHaveBeenCalledWith(500)
-      expect(responseMock.json).toHaveBeenCalledWith({ erro: 'Internal server error' })
+      expect(responseMock.json).toHaveBeenCalledWith({ error: 'Internal server error' })
     })
   })
 
@@ -178,7 +178,7 @@ describe('TaskController', () => {
       await taskController.showByStatus(requestMock as Request, responseMock as Response)
 
       expect(responseMock.status).toHaveBeenCalledWith(500)
-      expect(responseMock.json).toHaveBeenCalledWith({ erro: 'Internal server error' })
+      expect(responseMock.json).toHaveBeenCalledWith({ error: 'Internal server error' })
     })
   })
 
@@ -204,7 +204,7 @@ describe('TaskController', () => {
       await taskController.startTask(requestMock as Request, responseMock as Response)
 
       expect(responseMock.status).toHaveBeenCalledWith(404)
-      expect(responseMock.json).toHaveBeenCalledWith({ erro: 'Task with ID 1 was not found' })
+      expect(responseMock.json).toHaveBeenCalledWith({ error: 'Task with ID 1 was not found' })
     })
 
     it('Should return an error when trying to start a task with an invalid status', async () => {
@@ -217,7 +217,7 @@ describe('TaskController', () => {
 
       expect(responseMock.status).toHaveBeenCalledWith(422)
       expect(responseMock.json).toHaveBeenCalledWith({
-        erro: 'Only pending tasks can be started',
+        error: 'Only pending tasks can be started',
       })
     })
 
@@ -228,7 +228,7 @@ describe('TaskController', () => {
       await taskController.startTask(requestMock as Request, responseMock as Response)
 
       expect(responseMock.status).toHaveBeenCalledWith(500)
-      expect(responseMock.json).toHaveBeenCalledWith({ erro: 'Internal server error' })
+      expect(responseMock.json).toHaveBeenCalledWith({ error: 'Internal server error' })
     })
   })
 
@@ -254,7 +254,7 @@ describe('TaskController', () => {
       await taskController.doneTask(requestMock as Request, responseMock as Response)
 
       expect(responseMock.status).toHaveBeenCalledWith(404)
-      expect(responseMock.json).toHaveBeenCalledWith({ erro: 'Task with ID 1 was not found' })
+      expect(responseMock.json).toHaveBeenCalledWith({ error: 'Task with ID 1 was not found' })
     })
 
     it('Should return an error when trying to complete a task with an invalid status', async () => {
@@ -267,7 +267,7 @@ describe('TaskController', () => {
 
       expect(responseMock.status).toHaveBeenCalledWith(422)
       expect(responseMock.json).toHaveBeenCalledWith({
-        erro: 'Only in-progress tasks can be completed',
+        error: 'Only in-progress tasks can be completed',
       })
     })
 
@@ -278,7 +278,7 @@ describe('TaskController', () => {
       await taskController.doneTask(requestMock as Request, responseMock as Response)
 
       expect(responseMock.status).toHaveBeenCalledWith(500)
-      expect(responseMock.json).toHaveBeenCalledWith({ erro: 'Internal server error' })
+      expect(responseMock.json).toHaveBeenCalledWith({ error: 'Internal server error' })
     })
   })
 
@@ -305,7 +305,7 @@ describe('TaskController', () => {
       await taskController.changeTitle(requestMock as Request, responseMock as Response)
 
       expect(responseMock.status).toHaveBeenCalledWith(404)
-      expect(responseMock.json).toHaveBeenCalledWith({ erro: 'Task with ID 1 was not found' })
+      expect(responseMock.json).toHaveBeenCalledWith({ error: 'Task with ID 1 was not found' })
     })
 
     it('Should return an error when trying to change the title to empty', async () => {
@@ -316,7 +316,7 @@ describe('TaskController', () => {
 
       expect(responseMock.status).toHaveBeenCalledWith(422)
       expect(responseMock.json).toHaveBeenCalledWith({
-        erro: 'Title is required',
+        error: 'Title is required',
       })
     })
 
@@ -327,7 +327,7 @@ describe('TaskController', () => {
       await taskController.changeTitle(requestMock as Request, responseMock as Response)
 
       expect(responseMock.status).toHaveBeenCalledWith(500)
-      expect(responseMock.json).toHaveBeenCalledWith({ erro: 'Internal server error' })
+      expect(responseMock.json).toHaveBeenCalledWith({ error: 'Internal server error' })
     })
   })
 
@@ -356,7 +356,7 @@ describe('TaskController', () => {
       await taskController.changeDescription(requestMock as Request, responseMock as Response)
 
       expect(responseMock.status).toHaveBeenCalledWith(404)
-      expect(responseMock.json).toHaveBeenCalledWith({ erro: 'Task with ID 1 was not found' })
+      expect(responseMock.json).toHaveBeenCalledWith({ error: 'Task with ID 1 was not found' })
     })
 
     it('Should return an unexpected error when changing the description', async () => {
@@ -366,7 +366,7 @@ describe('TaskController', () => {
       await taskController.changeDescription(requestMock as Request, responseMock as Response)
 
       expect(responseMock.status).toHaveBeenCalledWith(500)
-      expect(responseMock.json).toHaveBeenCalledWith({ erro: 'Internal server error' })
+      expect(responseMock.json).toHaveBeenCalledWith({ error: 'Internal server error' })
     })
   })
 
@@ -389,7 +389,7 @@ describe('TaskController', () => {
       await taskController.deleteTask(requestMock as Request, responseMock as Response)
 
       expect(responseMock.status).toHaveBeenCalledWith(404)
-      expect(responseMock.json).toHaveBeenCalledWith({ erro: 'Task with ID 1 was not found' })
+      expect(responseMock.json).toHaveBeenCalledWith({ error: 'Task with ID 1 was not found' })
     })
 
     it('Should return an unexpected error when deleting a task', async () => {
@@ -399,7 +399,7 @@ describe('TaskController', () => {
       await taskController.deleteTask(requestMock as Request, responseMock as Response)
 
       expect(responseMock.status).toHaveBeenCalledWith(500)
-      expect(responseMock.json).toHaveBeenCalledWith({ erro: 'Internal server error' })
+      expect(responseMock.json).toHaveBeenCalledWith({ error: 'Internal server error' })
     })
   })
 })
