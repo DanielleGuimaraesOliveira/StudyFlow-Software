@@ -15,11 +15,11 @@ export class TaskController {
       const message = (error as Error).message
 
       if (error instanceof ValidationError || error instanceof DomainError) {
-        response.status(400).json({ erro: message })
+        response.status(400).json({ error: message })
         return
       }
 
-      response.status(500).json({ erro: 'Internal server error' })
+      response.status(500).json({ error: 'Internal server error' })
     }
   }
 
@@ -32,11 +32,11 @@ export class TaskController {
       const message = (error as Error).message
 
       if (error instanceof NotFoundError) {
-        response.status(404).json({ erro: message })
+        response.status(404).json({ error: message })
         return
       }
 
-      response.status(500).json({ erro: 'Internal server error' })
+      response.status(500).json({ error: 'Internal server error' })
     }
   }
 
@@ -46,7 +46,7 @@ export class TaskController {
       response.status(200).json(tasks)
       return
     } catch {
-      response.status(500).json({ erro: 'Internal server error' })
+      response.status(500).json({ error: 'Internal server error' })
       return
     }
   }
@@ -58,7 +58,7 @@ export class TaskController {
       response.status(200).json(listaDeTasks)
       return
     } catch {
-      response.status(500).json({ erro: 'Internal server error' })
+      response.status(500).json({ error: 'Internal server error' })
     }
   }
 
@@ -72,14 +72,14 @@ export class TaskController {
       const message = (error as Error).message
 
       if (error instanceof NotFoundError) {
-        response.status(404).json({ erro: message })
+        response.status(404).json({ error: message })
         return
       }
       if (error instanceof DomainError) {
-        response.status(422).json({ erro: message })
+        response.status(422).json({ error: message })
         return
       }
-      response.status(500).json({ erro: 'Internal server error' })
+      response.status(500).json({ error: 'Internal server error' })
     }
   }
 
@@ -93,14 +93,14 @@ export class TaskController {
       const message = (error as Error).message
 
       if (error instanceof NotFoundError) {
-        response.status(404).json({ erro: message })
+        response.status(404).json({ error: message })
         return
       }
       if (error instanceof DomainError) {
-        response.status(422).json({ erro: message })
+        response.status(422).json({ error: message })
         return
       }
-      response.status(500).json({ erro: 'Internal server error' })
+      response.status(500).json({ error: 'Internal server error' })
     }
   }
 
@@ -115,16 +115,16 @@ export class TaskController {
       const message = (error as Error).message
 
       if (error instanceof NotFoundError) {
-        response.status(404).json({ erro: message })
+        response.status(404).json({ error: message })
         return
       }
 
       if (error instanceof DomainError) {
-        response.status(422).json({ erro: message })
+        response.status(422).json({ error: message })
         return
       }
 
-      response.status(500).json({ erro: 'Internal server error' })
+      response.status(500).json({ error: 'Internal server error' })
     }
   }
 
@@ -139,11 +139,11 @@ export class TaskController {
       const message = (error as Error).message
 
       if (error instanceof NotFoundError) {
-        response.status(404).json({ erro: message })
+        response.status(404).json({ error: message })
         return
       }
 
-      response.status(500).json({ erro: 'Internal server error' })
+      response.status(500).json({ error: 'Internal server error' })
     }
   }
 
@@ -156,10 +156,10 @@ export class TaskController {
     } catch (error) {
       const message = (error as Error).message
       if (error instanceof NotFoundError) {
-        response.status(404).json({ erro: message })
+        response.status(404).json({ error: message })
         return
       }
-      response.status(500).json({ erro: 'Internal server error' })
+      response.status(500).json({ error: 'Internal server error' })
     }
   }
 }
