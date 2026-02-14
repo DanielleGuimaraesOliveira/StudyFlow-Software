@@ -11,7 +11,7 @@ describe('UserService', () => {
       save: jest.fn(),
       update: jest.fn(),
       findById: jest.fn(),
-      remove: jest.fn(),
+      deleteById: jest.fn(),
     }
 
     userService = new UserService(userRepositoryMock)
@@ -76,9 +76,7 @@ describe('UserService', () => {
     })
 
     it('Should throw when the update fails', async () => {
-      const user = new User({ id: 1, name: 'Danielle', email: 'dani@gmail.com' })
-      userRepositoryMock.findById.mockResolvedValue(user)
-      userRepositoryMock.update.mockResolvedValue(null)
+      userRepositoryMock.findById.mockResolvedValue(null)
 
       await expect(async () => {
         await userService.changeName(1, 'Joao')
@@ -153,12 +151,12 @@ describe('UserService', () => {
     it('Should delete the user correctly', async () => {
       const user = new User({ id: 1, name: 'Danielle', email: 'dani@gmail.com' })
       userRepositoryMock.findById.mockResolvedValue(user)
-      userRepositoryMock.remove.mockResolvedValue()
+      userRepositoryMock.deleteById.mockResolvedValue()
 
       await userService.delete(1)
 
       expect(userRepositoryMock.findById).toHaveBeenCalledWith(1)
-      expect(userRepositoryMock.remove).toHaveBeenCalledWith(1)
+      expect(userRepositoryMock.deleteById).toHaveBeenCalledWith(1)
     })
 
     it('Should throw when the user is not found', async () => {
