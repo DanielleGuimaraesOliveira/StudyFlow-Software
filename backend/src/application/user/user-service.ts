@@ -10,9 +10,9 @@ export interface UserServiceDTO {
 
 export interface UserRepository {
   save(user: User): Promise<User>
-  update(user: User): Promise<User | null>
+  update(user: User): Promise<User>
   findById(userId: number): Promise<User | null>
-  remove(userId: number): Promise<void>
+  deleteById(userId: number): Promise<void>
 }
 
 export class UserService {
@@ -32,47 +32,40 @@ export class UserService {
     return await this.userRepository.save(user)
   }
 
-  async changeName(userId: number, newName: string): Promise<User> {
+  async searchById(userId: number): Promise<User> {
     const user = await this.userRepository.findById(userId)
     if (!user) throw new NotFoundError(`Failed to find user with ID ${userId} in the database.`)
+    return user
+  }
+
+  async changeName(userId: number, newName: string): Promise<User> {
+    const user = await this.searchById(userId)
 
     user.setNewName(newName)
 
-    const result = await this.userRepository.update(user)
-    if (!result) throw new NotFoundError(`Failed to find user with ID ${userId} in the database.`)
-
-    return result
+    return await this.userRepository.update(user)
   }
 
   async changeEmail(userId: number, newEmail: string): Promise<User> {
-    const user = await this.userRepository.findById(userId)
-    if (!user) throw new NotFoundError(`Failed to find user with ID ${userId} in the database.`)
+    const user = await this.searchById(userId)
 
     user.setNewEmail(newEmail)
 
-    const result = await this.userRepository.update(user)
-    if (!result) throw new NotFoundError(`Failed to find user with ID ${userId} in the database.`)
-
-    return result
+    return await this.userRepository.update(user)
   }
 
   async changePassword(userId: number, newPassword: string): Promise<User> {
-    const user = await this.userRepository.findById(userId)
-    if (!user) throw new NotFoundError(`Failed to find user with ID ${userId} in the database.`)
+    const user = await this.searchById(userId)
 
     user.validatePassword(newPassword)
     const hashPassword = await hash(newPassword, 10)
     user.setPasswordHash(hashPassword)
 
-    const result = await this.userRepository.update(user)
-    if (!result) throw new NotFoundError(`Failed to find user with ID ${userId} in the database.`)
-
-    return result
+    return await this.userRepository.update(user)
   }
 
   async delete(userId: number): Promise<void> {
-    const result = await this.userRepository.findById(userId)
-    if (!result) throw new NotFoundError(`Failed to find user with ID ${userId} in the database.`)
-    await this.userRepository.remove(userId)
+    await this.searchById(userId)
+    await this.userRepository.deleteById(userId)
   }
 }
