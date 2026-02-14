@@ -187,7 +187,7 @@ describe('Task', () => {
   it('Should throw when changing title to more than 100 characters', () => {
     const createdAt = new Date('2020-06-12')
     const deadline = new Date('2025-01-01')
-    const longTitle = ('a').repeat(101)
+    const longTitle = 'a'.repeat(101)
     const task = new Task({
       id: 11,
       title: 'Study Go',
@@ -207,7 +207,7 @@ describe('Task', () => {
   })
 
   it('Should throw when creating a task with more than 100 characters', () => {
-    const longTitle = ('a').repeat(101)
+    const longTitle = 'a'.repeat(101)
     expect(
       () =>
         new Task({

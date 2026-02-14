@@ -140,7 +140,7 @@ describe('UserService', () => {
 
     it('Should throw when updating to an invalid password', async () => {
       const user = new User({ id: 1, name: 'Danielle', email: 'dani@gmail.com' })
-      
+
       userRepositoryMock.findById.mockResolvedValue(user)
 
       await expect(async () => {

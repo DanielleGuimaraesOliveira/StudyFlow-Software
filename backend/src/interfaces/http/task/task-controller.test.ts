@@ -293,9 +293,7 @@ describe('TaskController', () => {
 
       expect(responseMock.status).toHaveBeenCalledWith(200)
       expect(responseMock.json).toHaveBeenCalledWith(createdTask)
-      expect(responseMock.json).toHaveBeenCalledWith(
-        expect.objectContaining({ title: 'newTitle' })
-      )
+      expect(responseMock.json).toHaveBeenCalledWith(expect.objectContaining({ title: 'newTitle' }))
     })
 
     it('Should return an error when trying to change the title of a non-existent task', async () => {
