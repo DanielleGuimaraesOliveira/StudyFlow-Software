@@ -46,7 +46,6 @@ Task with ID ${id} was not found`)
 
   async startTask(id: number): Promise<Task> {
     const task = await this.searchById(id)
-    if (!task) throw new NotFoundError(`Task with ID ${id} was not found`)
 
     task.setStatusInProgress()
     return await this.taskRepository.update(task)
@@ -54,14 +53,12 @@ Task with ID ${id} was not found`)
 
   async doneTask(id: number): Promise<Task> {
     const task = await this.searchById(id)
-    if (!task) throw new NotFoundError(`Task with ID ${id} was not found`)
     task.setStatusDone()
     return await this.taskRepository.update(task)
   }
 
   async changeTitle(id: number, newTitle: string): Promise<Task> {
     const task = await this.searchById(id)
-    if (!task) throw new NotFoundError(`Task with ID ${id} was not found`)
     task.setNewTitle(newTitle)
     return await this.taskRepository.update(task)
   }
@@ -73,8 +70,7 @@ Task with ID ${id} was not found`)
   }
 
   async delete(id: number): Promise<void> {
-    const task = await this.searchById(id)
-    if (!task) throw new NotFoundError(`Task with ID ${id} was not found`)
+    await this.searchById(id)
     await this.taskRepository.deleteById(id)
   }
 }
