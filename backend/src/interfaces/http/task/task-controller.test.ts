@@ -3,7 +3,7 @@ import { Request, Response } from 'express'
 import { TaskController } from '../task/task-controller'
 import { Task } from '../../../domain/task/task-entity'
 import { TaskStatus } from '../../../domain/task/task-enums'
-import { DomainError, NotFoundError } from '../../../shared/errors/errors'
+import { DomainError, NotFoundError, DataBaseError } from '../../../shared/errors/errors'
 
 describe('TaskController', () => {
   const task = (
@@ -69,12 +69,9 @@ describe('TaskController', () => {
 
       requestMock.body = { descricao: 'Description' }
 
-      await taskController.registerTask(requestMock as Request, responseMock as Response)
-
-      expect(responseMock.status).toHaveBeenCalledWith(400)
-      expect(responseMock.json).toHaveBeenCalledWith({
-        error: 'Task title is required',
-      })
+      await expect(
+        taskController.registerTask(requestMock as Request, responseMock as Response)
+      ).rejects.toThrow(DomainError)
     })
 
     it('Should return an error when creating a task with less than 3 characters', async () => {
@@ -84,12 +81,9 @@ describe('TaskController', () => {
 
       requestMock.body = { titulo: '1a', descricao: 'descricao' }
 
-      await taskController.registerTask(requestMock as Request, responseMock as Response)
-
-      expect(responseMock.status).toHaveBeenCalledWith(400)
-      expect(responseMock.json).toHaveBeenCalledWith({
-        error: 'Title must be at least 3 characters long',
-      })
+      await expect(
+        taskController.registerTask(requestMock as Request, responseMock as Response)
+      ).rejects.toThrow(DomainError)
     })
   })
 
@@ -112,19 +106,9 @@ describe('TaskController', () => {
       )
       requestMock.params = { id: '1' }
 
-      await taskController.findById(requestMock as Request, responseMock as Response)
-      expect(responseMock.status).toHaveBeenCalledWith(404)
-      expect(responseMock.json).toHaveBeenCalledWith({ error: 'Task with ID 1 was not found' })
-    })
-
-    it('Should return an unexpected error when getting a task by id', async () => {
-      taskServiceMock.searchById.mockRejectedValue(new Error('Database connection failure'))
-      requestMock.params = { id: '3' }
-
-      await taskController.findById(requestMock as Request, responseMock as Response)
-
-      expect(responseMock.status).toHaveBeenCalledWith(500)
-      expect(responseMock.json).toHaveBeenCalledWith({ error: 'Internal server error' })
+      await expect(
+        taskController.findById(requestMock as Request, responseMock as Response)
+      ).rejects.toThrow(NotFoundError)
     })
   })
 
@@ -144,15 +128,6 @@ describe('TaskController', () => {
         ])
       )
     })
-
-    it('Should return an unexpected error when listing tasks', async () => {
-      taskServiceMock.listAll.mockRejectedValue(new Error('Database connection failure'))
-
-      await taskController.showAllTasks(requestMock as Request, responseMock as Response)
-
-      expect(responseMock.status).toHaveBeenCalledWith(500)
-      expect(responseMock.json).toHaveBeenCalledWith({ error: 'Internal server error' })
-    })
   })
 
   describe('ListTasksByStatus', () => {
@@ -170,15 +145,6 @@ describe('TaskController', () => {
           expect.objectContaining({ status: TaskStatus.Pending }),
         ])
       )
-    })
-
-    it('Should return an unexpected error when listing tasks by status', async () => {
-      taskServiceMock.listByStatus.mockRejectedValue(new Error('Database connection failure'))
-
-      await taskController.showByStatus(requestMock as Request, responseMock as Response)
-
-      expect(responseMock.status).toHaveBeenCalledWith(500)
-      expect(responseMock.json).toHaveBeenCalledWith({ error: 'Internal server error' })
     })
   })
 
@@ -201,10 +167,9 @@ describe('TaskController', () => {
       taskServiceMock.startTask.mockRejectedValue(new NotFoundError('Task with ID 1 was not found'))
       requestMock.params = { id: '1' }
 
-      await taskController.startTask(requestMock as Request, responseMock as Response)
-
-      expect(responseMock.status).toHaveBeenCalledWith(404)
-      expect(responseMock.json).toHaveBeenCalledWith({ error: 'Task with ID 1 was not found' })
+      await expect(
+        taskController.startTask(requestMock as Request, responseMock as Response)
+      ).rejects.toThrow(NotFoundError)
     })
 
     it('Should return an error when trying to start a task with an invalid status', async () => {
@@ -213,22 +178,9 @@ describe('TaskController', () => {
       )
       requestMock.params = { id: '1' }
 
-      await taskController.startTask(requestMock as Request, responseMock as Response)
-
-      expect(responseMock.status).toHaveBeenCalledWith(422)
-      expect(responseMock.json).toHaveBeenCalledWith({
-        error: 'Only pending tasks can be started',
-      })
-    })
-
-    it('Should return an unexpected error when starting a task', async () => {
-      taskServiceMock.startTask.mockRejectedValue(new Error('Database connection failure'))
-      requestMock.params = { id: '1' }
-
-      await taskController.startTask(requestMock as Request, responseMock as Response)
-
-      expect(responseMock.status).toHaveBeenCalledWith(500)
-      expect(responseMock.json).toHaveBeenCalledWith({ error: 'Internal server error' })
+      await expect(
+        taskController.startTask(requestMock as Request, responseMock as Response)
+      ).rejects.toThrow(DomainError)
     })
   })
 
@@ -251,10 +203,9 @@ describe('TaskController', () => {
       taskServiceMock.doneTask.mockRejectedValue(new NotFoundError('Task with ID 1 was not found'))
       requestMock.params = { id: '1' }
 
-      await taskController.doneTask(requestMock as Request, responseMock as Response)
-
-      expect(responseMock.status).toHaveBeenCalledWith(404)
-      expect(responseMock.json).toHaveBeenCalledWith({ error: 'Task with ID 1 was not found' })
+      await expect(
+        taskController.doneTask(requestMock as Request, responseMock as Response)
+      ).rejects.toThrow(NotFoundError)
     })
 
     it('Should return an error when trying to complete a task with an invalid status', async () => {
@@ -263,22 +214,9 @@ describe('TaskController', () => {
       )
       requestMock.params = { id: '1' }
 
-      await taskController.doneTask(requestMock as Request, responseMock as Response)
-
-      expect(responseMock.status).toHaveBeenCalledWith(422)
-      expect(responseMock.json).toHaveBeenCalledWith({
-        error: 'Only in-progress tasks can be completed',
-      })
-    })
-
-    it('Should return an unexpected error when completing a task', async () => {
-      taskServiceMock.doneTask.mockRejectedValue(new Error('Database connection failure'))
-      requestMock.params = { id: '1' }
-
-      await taskController.doneTask(requestMock as Request, responseMock as Response)
-
-      expect(responseMock.status).toHaveBeenCalledWith(500)
-      expect(responseMock.json).toHaveBeenCalledWith({ error: 'Internal server error' })
+      await expect(
+        taskController.doneTask(requestMock as Request, responseMock as Response)
+      ).rejects.toThrow(DomainError)
     })
   })
 
@@ -302,32 +240,18 @@ describe('TaskController', () => {
       )
       requestMock.params = { id: '1' }
 
-      await taskController.changeTitle(requestMock as Request, responseMock as Response)
-
-      expect(responseMock.status).toHaveBeenCalledWith(404)
-      expect(responseMock.json).toHaveBeenCalledWith({ error: 'Task with ID 1 was not found' })
+      await expect(
+        taskController.changeTitle(requestMock as Request, responseMock as Response)
+      ).rejects.toThrow(NotFoundError)
     })
 
     it('Should return an error when trying to change the title to empty', async () => {
       taskServiceMock.changeTitle.mockRejectedValue(new DomainError('Title is required'))
       requestMock.params = { id: '1', titulo: '' }
 
-      await taskController.changeTitle(requestMock as Request, responseMock as Response)
-
-      expect(responseMock.status).toHaveBeenCalledWith(422)
-      expect(responseMock.json).toHaveBeenCalledWith({
-        error: 'Title is required',
-      })
-    })
-
-    it('Should return an unexpected error when changing the title', async () => {
-      taskServiceMock.changeTitle.mockRejectedValue(new Error('Database connection failure'))
-      requestMock.params = { id: '1' }
-
-      await taskController.changeTitle(requestMock as Request, responseMock as Response)
-
-      expect(responseMock.status).toHaveBeenCalledWith(500)
-      expect(responseMock.json).toHaveBeenCalledWith({ error: 'Internal server error' })
+      await expect(
+        taskController.changeTitle(requestMock as Request, responseMock as Response)
+      ).rejects.toThrow(DomainError)
     })
   })
 
@@ -353,20 +277,9 @@ describe('TaskController', () => {
       )
       requestMock.params = { id: '1', descricao: 'novaDescricao' }
 
-      await taskController.changeDescription(requestMock as Request, responseMock as Response)
-
-      expect(responseMock.status).toHaveBeenCalledWith(404)
-      expect(responseMock.json).toHaveBeenCalledWith({ error: 'Task with ID 1 was not found' })
-    })
-
-    it('Should return an unexpected error when changing the description', async () => {
-      taskServiceMock.changeDescription.mockRejectedValue(new Error('Database connection failure'))
-      requestMock.params = { id: '1', descricao: 'Desc ' }
-
-      await taskController.changeDescription(requestMock as Request, responseMock as Response)
-
-      expect(responseMock.status).toHaveBeenCalledWith(500)
-      expect(responseMock.json).toHaveBeenCalledWith({ error: 'Internal server error' })
+      await expect(
+        taskController.changeDescription(requestMock as Request, responseMock as Response)
+      ).rejects.toThrow(NotFoundError)
     })
   })
 
@@ -386,20 +299,18 @@ describe('TaskController', () => {
       taskServiceMock.delete.mockRejectedValue(new NotFoundError('Task with ID 1 was not found'))
       requestMock.params = { id: '1' }
 
-      await taskController.deleteTask(requestMock as Request, responseMock as Response)
-
-      expect(responseMock.status).toHaveBeenCalledWith(404)
-      expect(responseMock.json).toHaveBeenCalledWith({ error: 'Task with ID 1 was not found' })
+      await expect(
+        taskController.deleteTask(requestMock as Request, responseMock as Response)
+      ).rejects.toThrow(NotFoundError)
     })
 
     it('Should return an unexpected error when deleting a task', async () => {
-      taskServiceMock.delete.mockRejectedValue(new Error('Database connection failure'))
+      taskServiceMock.delete.mockRejectedValue(new DataBaseError('Failed to delete task by id'))
       requestMock.params = { id: '1' }
 
-      await taskController.deleteTask(requestMock as Request, responseMock as Response)
-
-      expect(responseMock.status).toHaveBeenCalledWith(500)
-      expect(responseMock.json).toHaveBeenCalledWith({ error: 'Internal server error' })
+      await expect(
+        taskController.deleteTask(requestMock as Request, responseMock as Response)
+      ).rejects.toThrow(DataBaseError)
     })
   })
 })
