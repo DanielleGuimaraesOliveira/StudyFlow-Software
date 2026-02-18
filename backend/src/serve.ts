@@ -5,7 +5,7 @@ import cors from 'cors'
 import { TaskController } from './interfaces/http/task/task-controller'
 import { TaskService } from './application/task/task-service'
 import { TaskRepositoryPg } from './domain/task/task-repository'
-import { validation } from './shared/http/middlewares/validation'
+import { validation } from './shared/http/middlewares/validation-middleware'
 import {
   taskStatusParamsSchema,
   taskIdParamsSchema,
@@ -13,6 +13,7 @@ import {
   changeTitleTaskSchema,
   criarTaskSchema,
 } from './interfaces/http/task/task-schema'
+import { errorHandler } from './shared/http/middlewares/error-middleware'
 
 const app = express()
 
@@ -66,6 +67,8 @@ app.put(
 app.delete('/tasks/:id', validation(z.object({ params: taskIdParamsSchema })), (req, res) =>
   taskController.deleteTask(req, res)
 )
+
+app.use(errorHandler)
 
 app.listen(3000, () => {
   // eslint-disable-next-line no-console
