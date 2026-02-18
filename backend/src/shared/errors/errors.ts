@@ -3,7 +3,7 @@ export class ApplicationError extends Error {
 
   constructor(mensagem: string, statusCode: number) {
     super(mensagem)
-    this.name = 'ApplicationError;'
+    this.name = 'ApplicationError'
     this.statusCode = statusCode
   }
 }
