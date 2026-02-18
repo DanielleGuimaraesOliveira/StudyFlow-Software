@@ -1,4 +1,4 @@
-import { Request, Response, NextFunction, application } from 'express'
+import { Request, Response, NextFunction } from 'express'
 import { ApplicationError } from '../../errors/errors'
 export function errorHandler(
   error: unknown,
@@ -7,8 +7,8 @@ export function errorHandler(
   nextFunction: NextFunction
 ) {
   if (error instanceof ApplicationError) {
-    return response.json({ Error: error.message }).status(error.statusCode)
+    return response.status(error.statusCode).json({ error: error.message })
   }
 
-  return response.json('Internal server error').status(500)
+  return response.status(500).json({ error: 'Internal server error' })
 }
