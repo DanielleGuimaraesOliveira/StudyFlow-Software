@@ -2,7 +2,7 @@ import { Request, Response } from 'express'
 import { TaskDTO } from '../../../application/task/dto/service-dto'
 import { TaskService } from '../../../application/task/task-service'
 import { TaskStatus } from '../../../domain/task/task-enums'
-import { DomainError, NotFoundError, ValidationError } from '../../../shared/errors/errors'
+import { DomainError, NotFoundError } from '../../../shared/errors/errors'
 export class TaskController {
   constructor(private readonly taskService: TaskService) {}
 
@@ -14,7 +14,7 @@ export class TaskController {
     } catch (error) {
       const message = (error as Error).message
 
-      if (error instanceof ValidationError || error instanceof DomainError) {
+      if (error instanceof DomainError) {
         response.status(400).json({ error: message })
         return
       }
