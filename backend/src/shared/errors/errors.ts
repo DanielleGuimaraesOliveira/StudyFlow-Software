@@ -1,27 +1,27 @@
-export class ValidationError extends Error {
-  constructor(mensagem: string) {
+export class ApplicationError extends Error {
+  public statusCode: number
+
+  constructor(mensagem: string, statusCode: number) {
     super(mensagem)
-    this.name = 'ValidationError'
+    this.name = 'ApplicationError;'
+    this.statusCode = statusCode
   }
 }
 
-export class DomainError extends Error {
+export class DomainError extends ApplicationError {
   constructor(mensagem: string) {
-    super(mensagem)
-    this.name = 'DomainError'
+    super(mensagem, 422)
   }
 }
 
-export class NotFoundError extends Error {
+export class NotFoundError extends ApplicationError {
   constructor(mensagem: string) {
-    super(mensagem)
-    this.name = 'NotFoundError'
+    super(mensagem, 404)
   }
 }
 
-export class DataBaseError extends Error {
+export class DataBaseError extends ApplicationError {
   constructor(mensagem: string) {
-    super(mensagem)
-    this.name = 'DataBaseError'
+    super(mensagem, 500)
   }
 }

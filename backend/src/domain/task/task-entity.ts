@@ -1,5 +1,5 @@
 import { TaskStatus, TaskPriority } from '../task/task-enums'
-import { DomainError, ValidationError } from '../../shared/errors/errors'
+import { DomainError } from '../../shared/errors/errors'
 export interface TaskProperties {
   id: number
   title: string
@@ -34,7 +34,7 @@ export class Task {
 
   private validateTitle(title: string): void {
     if (!title || title.trim() == '') {
-      throw new ValidationError('Title is required')
+      throw new DomainError('Title is required')
     }
 
     if (title.length < 3) {

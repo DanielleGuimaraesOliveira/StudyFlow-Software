@@ -1,4 +1,4 @@
-import { DomainError, ValidationError } from '../../shared/errors/errors'
+import { DomainError } from '../../shared/errors/errors'
 export interface UserProperties {
   id: number
   name: string
@@ -33,18 +33,18 @@ export class User {
 
   private validateEmail(email: string): void {
     const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
-    if (!regex.test(email)) throw new ValidationError('Email is not in a valid format')
+    if (!regex.test(email)) throw new DomainError('Email is not in a valid format')
   }
 
   private validateName(name: string): void {
-    if (!name.trim()) throw new ValidationError('Username is required')
+    if (!name.trim()) throw new DomainError('Username is required')
     if (name.trim().length < 3) throw new DomainError('Username must be at least 3 characters long')
     if (name.trim().length > 100)
       throw new DomainError('Username must be at most 100 characters long')
   }
 
   public validatePassword(password: string): void {
-    if (!password.trim()) throw new ValidationError('Password is required')
+    if (!password.trim()) throw new DomainError('Password is required')
 
     if (password.length < 8) throw new DomainError('Password must be at least 8 characters long')
     if (!/[A-Z]/.test(password))

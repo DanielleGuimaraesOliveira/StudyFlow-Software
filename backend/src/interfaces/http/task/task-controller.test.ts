@@ -3,7 +3,7 @@ import { Request, Response } from 'express'
 import { TaskController } from '../task/task-controller'
 import { Task } from '../../../domain/task/task-entity'
 import { TaskStatus } from '../../../domain/task/task-enums'
-import { DomainError, NotFoundError, ValidationError } from '../../../shared/errors/errors'
+import { DomainError, NotFoundError } from '../../../shared/errors/errors'
 
 describe('TaskController', () => {
   const task = (
@@ -65,7 +65,7 @@ describe('TaskController', () => {
     })
 
     it('Should return an error when creating a task without a title', async () => {
-      taskServiceMock.create.mockRejectedValue(new ValidationError('Task title is required'))
+      taskServiceMock.create.mockRejectedValue(new DomainError('Task title is required'))
 
       requestMock.body = { descricao: 'Description' }
 
