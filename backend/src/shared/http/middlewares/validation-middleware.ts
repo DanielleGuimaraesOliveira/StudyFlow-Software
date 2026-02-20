@@ -1,5 +1,6 @@
 import { ZodType } from 'zod'
 import { Request, Response, NextFunction } from 'express'
+import { ValidationError } from '../../errors/errors'
 
 interface ValidatedData {
   params?: Record<string, unknown>
@@ -16,10 +17,7 @@ export function validation(schema: ZodType) {
     })
 
     if (!resultado.success) {
-      return res.status(400).json({
-        message: 'Dados inválidos',
-        errors: resultado.error.message,
-      })
+      throw new ValidationError('Invalid data', 400)
     }
 
     const data = resultado.data as ValidatedData
