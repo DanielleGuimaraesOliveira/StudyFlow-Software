@@ -1,6 +1,6 @@
-import { UserRepository, UserService } from '../../application/user/user-service'
-import { User } from '../../domain/user/user-entity'
-import { NotFoundError } from '../../shared/errors/errors'
+import { UserRepository, UserService } from '../../../application/user/user-service'
+import { User } from '../../../domain/user/user-entity'
+import { NotFoundError } from '../../../shared/errors/errors'
 
 describe('UserService', () => {
   let userService: UserService

@@ -1,4 +1,4 @@
-import { User } from '../user/user-entity'
+import { User } from '../../../domain/user/user-entity'
 
 describe('UserEntity', () => {
   it('Should create a user correctly', () => {
