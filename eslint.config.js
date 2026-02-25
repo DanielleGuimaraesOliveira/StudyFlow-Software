@@ -63,10 +63,10 @@ export default [
       '@typescript-eslint/no-unused-vars': [
         'warn',
         {
-          'argsIgnorePattern': '^_',
-          'varsIgnorePattern': '^_',
-          'destructuredArrayIgnorePattern': '^_'
-        }
+          argsIgnorePattern: '^_',
+          varsIgnorePattern: '^_',
+          destructuredArrayIgnorePattern: '^_',
+        },
       ],
 
       'no-console': 'warn',

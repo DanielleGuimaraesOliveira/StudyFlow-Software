@@ -1,6 +1,6 @@
 import { Request, Response, NextFunction } from 'express'
 import { ApplicationError } from '../../errors/errors'
-/* eslint-disable no-unused-vars */
+
 export function errorHandler(
   error: unknown,
   request: Request,
