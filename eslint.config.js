@@ -60,7 +60,14 @@ export default [
 
       // Usa a versão do TS em vez da do JS
       'no-unused-vars': 'off',
-      '@typescript-eslint/no-unused-vars': 'warn',
+      '@typescript-eslint/no-unused-vars': [
+        'warn',
+        {
+          'argsIgnorePattern': '^_',
+          'varsIgnorePattern': '^_',
+          'destructuredArrayIgnorePattern': '^_'
+        }
+      ],
 
       'no-console': 'warn',
       'no-debugger': 'warn',

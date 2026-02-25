@@ -19,7 +19,12 @@ app.use('/tasks', taskRouter)
 
 app.use(errorHandler)
 
-app.listen(3000, () => {
-  // eslint-disable-next-line no-console
-  console.log('Servidor rodando na porta 3000')
-})
+// Só inicia o servidor se for executado diretamente, não quando importado para testes
+if (require.main === module) {
+  app.listen(3000, () => {
+    // eslint-disable-next-line no-console
+    console.log('Servidor rodando na porta 3000')
+  })
+}
+
+export default app

@@ -27,7 +27,7 @@ export class DataBaseError extends ApplicationError {
 }
 
 export class ValidationError extends ApplicationError {
-  constructor(mensagem: string, details: unknown) {
+  constructor(mensagem: string) {
     super(mensagem, 400)
   }
 }

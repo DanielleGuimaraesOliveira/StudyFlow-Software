@@ -1,4 +1,5 @@
-// Arquivo de configuração inicial para testes Jest
-// Adicione aqui configurações globais para os testes
+// Arquivo de configuracao inicial para testes Jest
+// Adicione aqui configuracoes globais para os testes
 
-// Exemplo: configurar timeouts, mocks globais, etc.
+// Configuracoes globais do Jest
+jest.setTimeout(30000) // 30 segundos de timeout
