@@ -3,6 +3,7 @@ import express from 'express'
 import cors from 'cors'
 import { errorHandler } from './shared/http/middlewares/error-middleware'
 import taskRouter from './interfaces/http/task/task-router'
+import helmet from 'helmet'
 
 const app = express()
 
@@ -14,6 +15,8 @@ app.use(
     methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE'],
   })
 )
+
+app.use(helmet)
 
 app.use('/tasks', taskRouter)
 
