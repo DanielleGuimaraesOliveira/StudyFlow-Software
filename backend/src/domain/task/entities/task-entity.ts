@@ -1,5 +1,5 @@
-import { TaskStatus, TaskPriority } from '../task/task-enums'
-import { DomainError } from '../../shared/errors/errors'
+import { TaskStatus, TaskPriority } from './task-enums'
+import { DomainError } from '../../../shared/errors/errors'
 export interface TaskProperties {
   id: number
   title: string

@@ -1,9 +1,9 @@
 import 'dotenv/config'
-import { pool } from '../../../database/pool'
+import { pool } from '../../../../database/pool'
 import { Task } from '../task/task-entity'
-import { TaskPriority, TaskStatus } from '../task/task-enums'
-import { TaskRepository } from '../../application/task/task-service'
-import { DataBaseError } from '../../shared/errors/errors'
+import { TaskPriority, TaskStatus } from '../entities/task-enums'
+import { TaskRepository } from '../../../application/task/task-service'
+import { DataBaseError } from '../../../shared/errors/errors'
 
 interface TaskRow {
   id: number
