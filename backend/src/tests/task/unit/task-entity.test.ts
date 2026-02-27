@@ -1,5 +1,5 @@
-import { Task } from '../../../domain/task/task-entity'
-import { TaskStatus, TaskPriority } from '../../../domain/task/task-enums'
+import { Task } from '../../../domain/task/entities/task-entity'
+import { TaskStatus, TaskPriority } from '../../../domain/task/entities/task-enums'
 
 describe('Task', () => {
   it('Should create a task with the right properties', () => {

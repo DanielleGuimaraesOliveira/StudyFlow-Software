@@ -1,8 +1,8 @@
 import { TaskService } from '../../../application/task/task-service'
 import { Request, Response } from 'express'
 import { TaskController } from '../../../interfaces/http/task/task-controller'
-import { Task } from '../../../domain/task/task-entity'
-import { TaskStatus } from '../../../domain/task/task-enums'
+import { Task } from '../../../domain/task/entities/task-entity'
+import { TaskStatus } from '../../../domain/task/entities/task-enums'
 import { DomainError, NotFoundError, DataBaseError } from '../../../shared/errors/errors'
 
 describe('TaskController', () => {

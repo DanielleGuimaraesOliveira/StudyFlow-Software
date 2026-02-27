@@ -1,6 +1,7 @@
-import { TaskRepository, TaskService } from '../../../application/task/task-service'
-import { Task } from '../../../domain/task/task-entity'
-import { TaskStatus } from '../../../domain/task/task-enums'
+import { TaskService } from '../../../application/task/task-service'
+import { TaskRepository } from '../../../domain/task/repositories/task-repository.interface'
+import { Task } from '../../../domain/task/entities/task-entity'
+import { TaskStatus } from '../../../domain/task/entities/task-enums'
 
 describe('TaskService', () => {
   const createTask = (
@@ -84,7 +85,7 @@ describe('TaskService', () => {
         getTaskStatus: expect.any(Function),
       })
     )
-    const updatedTask = taskRepositoryMock.update.mock.calls[0][0] as Task
+    const updatedTask = taskRepositoryMock.update.mock.calls[0]![0] as Task
     expect(updatedTask.getTaskStatus()).toBe(TaskStatus.InProgress)
   })
 
@@ -116,7 +117,7 @@ describe('TaskService', () => {
     expect(taskRepositoryMock.update).toHaveBeenCalledWith(
       expect.objectContaining({ getTaskStatus: expect.any(Function) })
     )
-    const updatedTask = taskRepositoryMock.update.mock.calls[0][0] as Task
+    const updatedTask = taskRepositoryMock.update.mock.calls[0]![0] as Task
     expect(updatedTask.getTaskStatus()).toBe(TaskStatus.Done)
   })
 
@@ -147,7 +148,7 @@ describe('TaskService', () => {
     expect(taskRepositoryMock.findById).toHaveBeenCalledWith(1)
     expect(taskRepositoryMock.update).toHaveBeenCalledWith(expect.any(Task))
 
-    const updatedTask = taskRepositoryMock.update.mock.calls[0][0] as Task
+    const updatedTask = taskRepositoryMock.update.mock.calls[0]![0] as Task
     expect(updatedTask.getTitle()).toBe('newTitle')
   })
 
@@ -180,7 +181,7 @@ describe('TaskService', () => {
     expect(taskRepositoryMock.findById).toHaveBeenCalledWith(1)
     expect(taskRepositoryMock.update).toHaveBeenCalledWith(expect.any(Task))
 
-    const updatedTask = taskRepositoryMock.update.mock.calls[0][0] as Task
+    const updatedTask = taskRepositoryMock.update.mock.calls[0]![0] as Task
     expect(updatedTask.getDescription()).toBe('newDescription')
   })
 
