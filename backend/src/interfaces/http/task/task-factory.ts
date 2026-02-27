@@ -1,5 +1,5 @@
 import { TaskService } from '../../../application/task/task-service'
-import { TaskRepositoryPg } from '../../../domain/task/task-repository'
+import { TaskRepositoryPg } from '../../../domain/task/repositories/task-repository'
 import { TaskController } from './task-controller'
 
 export function taskDependencies(): TaskController {

@@ -1,16 +1,8 @@
 import { NotFoundError } from '../../shared/errors/errors'
-import { Task } from '../../domain/task/task-entity'
-import { TaskStatus } from '../../domain/task/task-enums'
+import { Task } from '../../domain/task/entities/task-entity'
+import { TaskStatus } from '../../domain/task/entities/task-enums'
 import { TaskDTO } from './dto/service-dto'
-
-export interface TaskRepository {
-  save(task: Task): Promise<Task>
-  findById(id: number): Promise<Task | null>
-  findAll(): Promise<Task[]>
-  findByStatus(status: TaskStatus): Promise<Task[]>
-  update(task: Task): Promise<Task>
-  deleteById(id: number): Promise<void>
-}
+import { TaskRepository } from '../../domain/task/repositories/task-repository.interface'
 
 export class TaskService {
   constructor(private readonly taskRepository: TaskRepository) {}

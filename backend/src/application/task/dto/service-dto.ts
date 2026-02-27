@@ -1,4 +1,4 @@
-import { TaskStatus, TaskPriority } from '../../../domain/task/task-enums'
+import { TaskStatus, TaskPriority } from '../../../domain/task/entities/task-enums'
 export interface TaskDTO {
   title: string
   description?: string

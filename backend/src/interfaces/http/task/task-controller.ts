@@ -1,7 +1,7 @@
 import { Request, Response } from 'express'
 import { TaskDTO } from '../../../application/task/dto/service-dto'
 import { TaskService } from '../../../application/task/task-service'
-import { TaskStatus } from '../../../domain/task/task-enums'
+import { TaskStatus } from '../../../domain/task/entities/task-enums'
 export class TaskController {
   constructor(private readonly taskService: TaskService) {}
 

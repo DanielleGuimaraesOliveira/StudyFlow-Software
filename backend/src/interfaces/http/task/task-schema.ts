@@ -1,5 +1,5 @@
 import { z } from 'zod'
-import { TaskPriority, TaskStatus } from '../../../domain/task/task-enums'
+import { TaskPriority, TaskStatus } from '../../../domain/task/entities/task-enums'
 
 export const taskIdParamsSchema = z.object({
   id: z.coerce.number().int().positive(),
